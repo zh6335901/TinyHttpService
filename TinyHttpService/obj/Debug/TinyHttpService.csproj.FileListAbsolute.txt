@@ -1,0 +1,5 @@
+E:\Users\Zhang\documents\visual studio 2012\Projects\TinyHttpService\TinyHttpService\bin\Debug\TinyHttpService.dll
+E:\Users\Zhang\documents\visual studio 2012\Projects\TinyHttpService\TinyHttpService\bin\Debug\TinyHttpService.pdb
+E:\Users\Zhang\documents\visual studio 2012\Projects\TinyHttpService\TinyHttpService\obj\Debug\TinyHttpService.csprojResolveAssemblyReference.cache
+E:\Users\Zhang\documents\visual studio 2012\Projects\TinyHttpService\TinyHttpService\obj\Debug\TinyHttpService.dll
+E:\Users\Zhang\documents\visual studio 2012\Projects\TinyHttpService\TinyHttpService\obj\Debug\TinyHttpService.pdb

@@ -1,0 +1,8 @@
+E:\Users\Zhang\documents\visual studio 2012\Projects\TinyHttpService\TinyHttpService.ConsoleTest\obj\Debug\TinyHttpService.ConsoleTest.csprojResolveAssemblyReference.cache
+E:\Users\Zhang\documents\visual studio 2012\Projects\TinyHttpService\TinyHttpService.ConsoleTest\bin\Debug\TinyHttpService.ConsoleTest.exe.config
+E:\Users\Zhang\documents\visual studio 2012\Projects\TinyHttpService\TinyHttpService.ConsoleTest\bin\Debug\TinyHttpService.ConsoleTest.exe
+E:\Users\Zhang\documents\visual studio 2012\Projects\TinyHttpService\TinyHttpService.ConsoleTest\bin\Debug\TinyHttpService.ConsoleTest.pdb
+E:\Users\Zhang\documents\visual studio 2012\Projects\TinyHttpService\TinyHttpService.ConsoleTest\bin\Debug\TinyHttpService.dll
+E:\Users\Zhang\documents\visual studio 2012\Projects\TinyHttpService\TinyHttpService.ConsoleTest\bin\Debug\TinyHttpService.pdb
+E:\Users\Zhang\documents\visual studio 2012\Projects\TinyHttpService\TinyHttpService.ConsoleTest\obj\Debug\TinyHttpService.ConsoleTest.exe
+E:\Users\Zhang\documents\visual studio 2012\Projects\TinyHttpService\TinyHttpService.ConsoleTest\obj\Debug\TinyHttpService.ConsoleTest.pdb
