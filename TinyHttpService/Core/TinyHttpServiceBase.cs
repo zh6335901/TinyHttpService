@@ -23,14 +23,14 @@ namespace TinyHttpService.Core
         {
             listener = new TcpListener(IPAddress.Any, port);
             listener.Start();
-            listener.BeginAcceptSocket(AcceptCallback, listener);
+            listener.BeginAcceptTcpClient(AcceptCallback, listener);
         }
 
         private void AcceptCallback(IAsyncResult ar) 
         {
             var listener = ar.AsyncState as TcpListener;
 
-            var client = listener.EndAcceptSocket(ar);
+            var client = listener.EndAcceptTcpClient(ar);
             if (client != null)
             {
                 Task task = new Task(new Action<object>((obj) => 
@@ -43,7 +43,8 @@ namespace TinyHttpService.Core
                     try { tcpClient.Close(); } catch { }
 
                 }), client);
-              
+
+                task.Start();
             }
         }
 

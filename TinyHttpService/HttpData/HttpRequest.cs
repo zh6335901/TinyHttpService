@@ -4,11 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TinyHttpService.RequestData
+namespace TinyHttpService.HttpData
 {
     public class HttpRequest
     {
-        public HttpRequestHeader Header { get; internal set; }
+        public string RequestMethod { get; internal set; }
+        public string Uri { get; internal set; }
+
+        public HttpHeader Header { get; internal set; }
         public HttpRequestBody Body { get; internal set; }
     }
 }

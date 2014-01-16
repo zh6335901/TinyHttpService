@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TinyHttpService.Core;
 using TinyHttpService.Core.Interface;
-using TinyHttpService.RequestData;
+using TinyHttpService.HttpData;
 using TinyHttpService.RequestParser.Interface;
 
 namespace TinyHttpService.Implement

@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-using TinyHttpService.RequestData;
+using TinyHttpService.HttpData;
 using TinyHttpService.RequestParser.Interface;
 using TinyHttpService.Utils;
 
@@ -17,23 +17,25 @@ namespace TinyHttpService.RequestParser
     {
         public HttpRequest Parse(NetworkStream stream)
         {
+            const string CRLF = "\r\n";
+
             HttpRequest request = new HttpRequest();
-            HttpRequestHeader header = new HttpRequestHeader();
+            HttpHeader header = new HttpHeader();
             HttpRequestBody body;
 
             string startLine = ReadLine(stream);
-            var startLineRule = new Regex(@"^(GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT) (.+) HTTP/1.1$");
+            var startLineRule = new Regex(@"^(GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT) (.+) HTTP/1.1\r\n$");
 
             if (startLineRule.IsMatch(startLine))
             {
                 var match = startLineRule.Match(startLine);
-                header.RequestMethod = match.Groups[1].Value.Trim();
-                header.Uri = match.Groups[2].Value.Trim();
+                request.RequestMethod = match.Groups[1].Value.Trim();
+                request.Uri = match.Groups[2].Value.Trim();
             }
 
             string line;
             var headerPropertyRule = new Regex(@"(.+?):(.+)");
-            while ((line = ReadLine(stream)) != Environment.NewLine)
+            while ((line = ReadLine(stream)) != CRLF)
             {
                 if (headerPropertyRule.IsMatch(line))
                 {
@@ -42,19 +44,22 @@ namespace TinyHttpService.RequestParser
                 }
             }
 
+            request.Header = header;
+
             //非GET请求            
-            if (header.RequestMethod != "GET")
+            if (request.RequestMethod != "GET")
             {
                 body = new HttpRequestBody();
+
                 if (header["Content-Type"] != null && header["Content-Type"].Contains("multipart/form-data"))
-                { 
+                {
                     //待实现
                 }
                 else
                 {
                     while (string.IsNullOrEmpty(line = ReadLine(stream)))
                     {
-                        if (line != Environment.NewLine)
+                        if (line != CRLF)
                         {
                             var bodyProperties = line.Split('&');
                             foreach (var bodyProperty in bodyProperties)
@@ -73,7 +78,7 @@ namespace TinyHttpService.RequestParser
 
         private string ReadLine(NetworkStream stream)
         {
-            return StreamUtil.ReadLine(stream);
+            return stream.ReadLine();
         }
     }
 }

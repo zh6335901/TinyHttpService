@@ -4,12 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TinyHttpService.RequestData
+namespace TinyHttpService.HttpData
 {
-    public class HttpRequestHeader
+    public class HttpHeader
     {
-        public string Uri { get; internal set; }
-        public string RequestMethod { get; internal set; }
         public Dictionary<string, string> Properties { get; internal set; }
 
         public string this[string key]
@@ -24,7 +22,7 @@ namespace TinyHttpService.RequestData
             }
         }
 
-        public HttpRequestHeader()
+        public HttpHeader()
         {
             this.Properties = new Dictionary<string,string>();
         }

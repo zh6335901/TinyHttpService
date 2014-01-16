@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ServiceStack.Text">
+      <HintPath>..\packages\ServiceStack.Text.4.0.7\lib\net40\ServiceStack.Text.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -39,10 +42,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionResults\ContentResult.cs" />
+    <Compile Include="ActionResults\Interface\ActionResult.cs" />
+    <Compile Include="ActionResults\JsonResult.cs" />
     <Compile Include="Attributes\HttpMethodAttribute.cs" />
-    <Compile Include="RequestData\HttpRequest.cs" />
-    <Compile Include="RequestData\HttpRequestBody.cs" />
-    <Compile Include="RequestData\HttpRequestHeader.cs" />
+    <Compile Include="HttpData\HttpContext.cs" />
+    <Compile Include="HttpData\HttpRequest.cs" />
+    <Compile Include="HttpData\HttpRequestBody.cs" />
+    <Compile Include="HttpData\HttpHeader.cs" />
+    <Compile Include="HttpData\HttpResponse.cs" />
+    <Compile Include="HttpData\HttpStatusCodes.cs" />
     <Compile Include="RequestParser\HttpRequestParser.cs" />
     <Compile Include="Core\TinyHttpServiceBase.cs" />
     <Compile Include="Core\TinyHttpServiceHandler.cs" />
@@ -53,7 +62,11 @@
     <Compile Include="Utils\StreamUtil.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Route\" />
     <Folder Include="SerivceChannel\Interface\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

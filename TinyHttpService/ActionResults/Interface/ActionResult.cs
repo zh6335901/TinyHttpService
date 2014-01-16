@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using TinyHttpService.HttpData;
 
-namespace TinyHttpService.RequestParser.Interface
+namespace TinyHttpService.ActionResults.Interface
 {
-    public interface IHttpRequestParser
+    public abstract class ActionResult
     {
-        HttpRequest Parse(NetworkStream stream);
+        public abstract void Execute(HttpContext context);
     }
 }

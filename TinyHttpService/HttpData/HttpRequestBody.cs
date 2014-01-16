@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TinyHttpService.RequestData
+namespace TinyHttpService.HttpData
 {
     public class HttpRequestBody
     {
