@@ -23,6 +23,13 @@ namespace TinyHttpService.Implement
         public void ProcessRequest(NetworkStream stream)
         {
             HttpRequest request = requestParser.Parse(stream);
+            HttpResponse response = new HttpResponse(stream);
+
+            HttpContext context = new HttpContext 
+            {
+                Request = request,
+                Response = response
+            };
         }
     }
 }
