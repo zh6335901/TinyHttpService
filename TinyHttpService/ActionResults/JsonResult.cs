@@ -22,11 +22,17 @@ namespace TinyHttpService.ActionResults
 
             var response = context.Response;
             response.ContentType = "application/json";
+            response.StatusCode = 200;
 
-            if (Data != null)
+            if (Data == null)
             {
-                var json = JsonSerializer.SerializeToString(Data, Data.GetType());
+                response.Write(string.Empty);
+                return;
             }
+
+            var json = JsonSerializer.SerializeToString(Data, Data.GetType());
+            response.AddHeader("Content-Length", Encoding.Default.GetByteCount(json).ToString());
+            response.Write(json);
         }
     }
 }

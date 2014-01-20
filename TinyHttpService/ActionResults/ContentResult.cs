@@ -12,6 +12,12 @@ namespace TinyHttpService.ActionResults
     {
         public string Content { get; set; }
 
+        public ContentResult() { }
+        public ContentResult(string content)
+        {
+            this.Content = content;
+        }
+
         public override void Execute(HttpContext context)
         {
             if (context == null)
@@ -21,7 +27,9 @@ namespace TinyHttpService.ActionResults
 
             var response = context.Response;
             response.ContentType = "text/plain";
-            //待实现
+            response.StatusCode = 200;
+            response.AddHeader("Content-Length", Encoding.Default.GetByteCount(Content).ToString());
+            response.Write(Content);
         }
     }
 }

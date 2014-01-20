@@ -26,25 +26,37 @@ namespace TinyHttpService.Core
             listener.BeginAcceptTcpClient(AcceptCallback, listener);
         }
 
-        private void AcceptCallback(IAsyncResult ar) 
+        private void AcceptCallback(IAsyncResult ar)
         {
             var listener = ar.AsyncState as TcpListener;
 
-            var client = listener.EndAcceptTcpClient(ar);
-            if (client != null)
+            try
             {
-                Task task = new Task(new Action<object>((obj) => 
+                var client = listener.EndAcceptTcpClient(ar);
+
+                if (client != null)
                 {
-                    var tcpClient = obj as TcpClient;
-                    var stream = tcpClient.GetStream();
-                    httpServiceHandler.ProcessRequest(stream);
+                    Task task = new Task(new Action<object>((obj) =>
+                    {
+                        var tcpClient = obj as TcpClient;
+                        var stream = tcpClient.GetStream();
+                        try
+                        {
+                            httpServiceHandler.ProcessRequest(stream);
+                        }
+                        finally
+                        {
+                            stream.Close();
+                            tcpClient.Close();
+                        }
 
-                    try { stream.Close(); } catch { }
-                    try { tcpClient.Close(); } catch { }
-
-                }), client);
-
-                task.Start();
+                    }), client);
+                    task.Start();
+                }
+            }
+            finally
+            {
+                listener.BeginAcceptTcpClient(AcceptCallback, listener);
             }
         }
 

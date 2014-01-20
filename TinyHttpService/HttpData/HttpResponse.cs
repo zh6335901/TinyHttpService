@@ -12,7 +12,7 @@ namespace TinyHttpService.HttpData
     public class HttpResponse
     {
         public NetworkStream ResponseStream { get; private set; }
-        public HttpHeader Header { get; private set; }
+        public HttpHeader Header { get; set; }
 
         private int statusCode;
         private bool isHeaderWritten;
@@ -44,9 +44,9 @@ namespace TinyHttpService.HttpData
             }
             set
             {
-                if (value < 100 || value >= 600)
+                if (HttpStatusCodes.StatusCodes[value] == null)
                 {
-                    throw new InvalidOperationException();
+                    throw new InvalidOperationException("Invalid status code");
                 }
 
                 statusCode = value;
@@ -55,7 +55,7 @@ namespace TinyHttpService.HttpData
 
         private void WriteHead()
         {
-            string head = string.Format(@"HTTP/1.1 {0} {1}\r\n{2}\r\n",
+            string head = string.Format("HTTP/1.1 {0} {1}\r\n{2}\r\n",
                                             StatusCode, HttpStatusCodes.StatusCodes[StatusCode], Header.ToString());
 
             ResponseStream.Write(head);
@@ -69,7 +69,23 @@ namespace TinyHttpService.HttpData
                 WriteHead();
             }
 
-            ResponseStream.Write(bytes, 0, bytes.Length);
+            if (bytes != null)
+            {
+                ResponseStream.Write(bytes, 0, bytes.Length);
+            }
+        }
+
+        public void Write(string str)
+        {
+            if (!isHeaderWritten)
+            {
+                WriteHead();
+            }
+
+            if (!string.IsNullOrEmpty(str))
+            {
+                ResponseStream.Write(str);
+            }
         }
 
         public string ContentType { get; set; }

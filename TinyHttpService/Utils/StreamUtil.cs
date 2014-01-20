@@ -41,6 +41,7 @@ namespace TinyHttpService.Utils
                 byte[] bytes = Encoding.Default.GetBytes(str);
                 stream.Write(bytes, 0, bytes.Length);
                 stream.Flush();
+                return;
             }
 
             throw new InvalidOperationException("stream can't write");

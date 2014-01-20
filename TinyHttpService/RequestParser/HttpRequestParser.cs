@@ -35,7 +35,7 @@ namespace TinyHttpService.RequestParser
 
             string line;
             var headerPropertyRule = new Regex(@"(.+?):(.+)");
-            while ((line = ReadLine(stream)) != CRLF)
+            while ((line = ReadLine(stream)) != Environment.NewLine)
             {
                 if (headerPropertyRule.IsMatch(line))
                 {
@@ -50,9 +50,9 @@ namespace TinyHttpService.RequestParser
             if (request.RequestMethod != "GET")
             {
                 body = new HttpRequestBody();
-
+           
                 if (header["Content-Type"] != null && header["Content-Type"].Contains("multipart/form-data"))
-                {
+                { 
                     //待实现
                 }
                 else

@@ -30,6 +30,9 @@ namespace TinyHttpService.Implement
                 Request = request,
                 Response = response
             };
+
+            response.AddHeader("Content-Type", "text/html");
+            response.Write("<html><head></head><body><div>Hello World!</div></body></html>");
         }
     }
 }
