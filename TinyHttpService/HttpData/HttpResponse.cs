@@ -88,6 +88,18 @@ namespace TinyHttpService.HttpData
             }
         }
 
-        public string ContentType { get; set; }
+        private string contentType;
+        public string ContentType 
+        {
+            get 
+            {
+                return contentType;
+            }
+            set 
+            {
+                Header["Content-Type"] = value;
+                this.contentType = value;
+            }
+        }
     }
 }

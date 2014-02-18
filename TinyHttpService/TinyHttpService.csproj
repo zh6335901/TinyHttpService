@@ -56,6 +56,7 @@
     <Compile Include="HttpData\HttpHeader.cs" />
     <Compile Include="HttpData\HttpResponse.cs" />
     <Compile Include="HttpData\HttpStatusCodes.cs" />
+    <Compile Include="HttpData\FilePart.cs" />
     <Compile Include="RequestParser\HttpRequestParser.cs" />
     <Compile Include="Core\TinyHttpServiceBase.cs" />
     <Compile Include="Core\TinyHttpServiceHandler.cs" />

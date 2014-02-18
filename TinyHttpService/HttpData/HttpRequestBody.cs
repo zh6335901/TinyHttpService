@@ -10,7 +10,7 @@ namespace TinyHttpService.HttpData
     public class HttpRequestBody
     {
         public Dictionary<string, string> Properties { get; internal set; }
-        public List<FileStream> Files { get; internal set; }
+        public List<FilePart> Files { get; internal set; }
 
         public string this[string key]
         {
@@ -27,7 +27,7 @@ namespace TinyHttpService.HttpData
         public HttpRequestBody() 
         {
             this.Properties = new Dictionary<string, string>();
-            this.Files = new List<FileStream>();
+            this.Files = new List<FilePart>();
         }
 
         public override string ToString()

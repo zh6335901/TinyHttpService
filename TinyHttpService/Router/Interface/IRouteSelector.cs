@@ -10,7 +10,7 @@ namespace TinyHttpService.Router.Interface
 {
     public interface IRouteSelector
     {
-        RouteTable RouteTable { get; }
+        RouteTable Routes { get; }
         Func<HttpContext, ActionResult> Select(HttpRequest request);
     }
 }

@@ -27,6 +27,14 @@ namespace TinyHttpService.Utils
                 if (value == '\n')
                 {
                     var line = Encoding.Default.GetString(bytes.ToArray());
+                    if (line.Contains("\r\n"))
+                    {
+                        line = line.Substring(0, line.Length - 2);
+                    }
+                    else
+                    {
+                        line = line.Substring(0, line.Length - 1);
+                    }
                     return line;
                 }
             }
