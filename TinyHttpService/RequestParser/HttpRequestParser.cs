@@ -49,15 +49,15 @@ namespace TinyHttpService.RequestParser
             {
                 body = new HttpRequestBody();
            
-                if (header["Content-Type"] != null && header["Content-Type"].Contains("multipart/form-data"))
+                if (header["Content-Type"] != null && 
+                        header["Content-Type"].Contains("multipart/form-data"))
                 {
                     var match = new Regex(@"boundary=(.+)").Match(header["Content-Type"]);
-                    string boundary = match.Groups[1].Value;
+                    string boundaryKey = match.Groups[1].Value;
 
-                    string splitter = string.Format("--{0}", boundary);
-                    string end = string.Format("--{0}--", boundary);
-
-                    ParsePart(stream, body, splitter, end);
+                    MultiPartFormDataParser multiPartFormDataparser = 
+                                                new MultiPartFormDataParser(stream, boundaryKey);
+                    
                 }
                 else
                 {
@@ -77,46 +77,6 @@ namespace TinyHttpService.RequestParser
             return request;
         }
 
-        private void ParsePart(NetworkStream stream, HttpRequestBody body, string splitter, string end)
-        {
-            string line = ReadLine(stream);
-            while (line != end)
-            {
-                if (line == splitter)
-                {
-                    break;
-                }
-
-                string first = ReadLine(stream);
-                string second = string.Empty;
-                if (first != end)
-                {
-                    Dictionary<string, string> paramters = first.Split(';')
-                                                              .Select(x => x.Split(new[] { ':', '=' }))
-                                                              .ToDictionary(
-                                                                    x => x[0].Trim().Replace("\"", string.Empty).ToLower(),
-                                                                    x => x[1].Trim().Replace("\"", string.Empty));
-
-                    if (!paramters.ContainsKey("filename"))
-                    {
-                        StringBuilder value = new StringBuilder();
-                        do
-                        {
-                            line = ReadLine(stream);
-                            value.AppendLine(line);
-                        }
-                        while (line != end && line != splitter);
-
-                        body[paramters["name"]] = value.ToString();
-                    }
-                    else
-                    {
-                        //先使用内存存储吧，遇到大文件肯定是不行的
-                        MemoryStream ms = new MemoryStream();
-                    }
-                }
-            }
-        }
 
         private string ReadLine(NetworkStream stream)
         {

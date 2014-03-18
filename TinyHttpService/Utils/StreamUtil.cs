@@ -16,17 +16,16 @@ namespace TinyHttpService.Utils
         public static string ReadLine(this Stream stream)
         {
             var bytes = new List<byte>();
+            int value = -1;
+            string line = string.Empty;
 
-            while (stream.CanRead)
+            while ((value = stream.ReadByte()) != -1)
             {
-                int value = stream.ReadByte();
-                if (value == -1) return string.Empty;
-
                 bytes.Add(Convert.ToByte(value));
 
                 if (value == '\n')
                 {
-                    var line = Encoding.Default.GetString(bytes.ToArray());
+                    line = Encoding.Default.GetString(bytes.ToArray());
                     if (line.Contains("\r\n"))
                     {
                         line = line.Substring(0, line.Length - 2);
@@ -39,7 +38,7 @@ namespace TinyHttpService.Utils
                 }
             }
 
-            throw new InvalidOperationException("strean can't read");
+            return string.Empty;
         }
 
         public static void Write(this Stream stream, string str)
