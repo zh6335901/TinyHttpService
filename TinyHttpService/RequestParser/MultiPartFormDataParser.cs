@@ -9,7 +9,7 @@ using TinyHttpService.Utils;
 
 namespace TinyHttpService.RequestParser
 {
-    internal class MultiPartFormDataParser
+    public class MultiPartFormDataParser
     {
         const int DEFAULT_BUFFER_LENGTH = 4096;
 
@@ -18,15 +18,21 @@ namespace TinyHttpService.RequestParser
         private readonly string endBoundary;
         private readonly byte[] endBoundaryBytes;
 
-        //private byte[] buffer;
         private bool readEndBoundary = false;
+        private RebufferableStreamReader reader;
 
-        internal int BinaryBufferSize { get; set; }
-        internal List<FilePart> Files { get; set; }
-        internal Dictionary<string, string> Parameters { get; set; }
+        public int BinaryBufferSize { get; set; }
+        public List<FilePart> Files { get; set; }
+        public Dictionary<string, string> Parameters { get; set; }
 
-        internal MultiPartFormDataParser(Stream stream, string boundaryKey, int binaryBufferSize = DEFAULT_BUFFER_LENGTH)
+        public MultiPartFormDataParser(Stream stream, string boundaryKey = null, int binaryBufferSize = DEFAULT_BUFFER_LENGTH)
         {
+            reader = new RebufferableStreamReader(stream);
+            if (string.IsNullOrEmpty(boundaryKey)) 
+            {
+                boundaryKey = DetectBoundaryKey(reader);
+            }
+
             boundary = string.Format("--{0}", boundaryKey);
             endBoundary = string.Format("--{0}--", boundaryKey);
             boundaryBytes = Encoding.Default.GetBytes(boundary);
@@ -35,9 +41,17 @@ namespace TinyHttpService.RequestParser
             BinaryBufferSize = binaryBufferSize;
             Files = new List<FilePart>();
             Parameters = new Dictionary<string, string>();
+            Parse();
         }
 
-        internal void Parse(RebufferableStreamReader reader)
+        private string DetectBoundaryKey(RebufferableStreamReader reader)
+        {
+            var boundary = string.Concat(reader.ReadLine().Skip(2));
+            reader.Rebuffer(Encoding.Default.GetBytes("--" + boundary + "\r\n"));
+            return boundary;
+        }
+
+        private void Parse()
         {
             string line = reader.ReadLine();
             while (!this.readEndBoundary)
@@ -66,7 +80,7 @@ namespace TinyHttpService.RequestParser
                 }
                 else
                 {
-                    ParseFilePart(reader);
+                    ParseFilePart(reader, partHeaders);
                 }
 
             }

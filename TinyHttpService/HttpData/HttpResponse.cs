@@ -1,23 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-
 using TinyHttpService.Utils;
 
 namespace TinyHttpService.HttpData
 {
     public class HttpResponse
     {
-        public NetworkStream ResponseStream { get; private set; }
+        public Stream ResponseStream { get; private set; }
         public HttpHeader Header { get; set; }
 
         private int statusCode;
         private bool isHeaderWritten;
 
-        public HttpResponse(NetworkStream stream)
+        public HttpResponse(Stream stream)
         {
             this.ResponseStream = stream;
             this.Header = new HttpHeader();

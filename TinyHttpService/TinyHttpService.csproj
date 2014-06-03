@@ -60,11 +60,15 @@
     <Compile Include="RequestParser\HttpRequestParser.cs" />
     <Compile Include="Core\TinyHttpServiceBase.cs" />
     <Compile Include="Core\TinyHttpServiceHandler.cs" />
+    <Compile Include="RequestParser\Interface\RequestBodyDataParseCommand.cs" />
     <Compile Include="RequestParser\Interface\IHttpRequestParser.cs" />
     <Compile Include="Core\Interface\IHttpService.cs" />
     <Compile Include="Core\Interface\IHttpServiceHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RequestParser\JsonBodyDataParseCommand.cs" />
+    <Compile Include="RequestParser\MultiPartFormDataParseCommand.cs" />
     <Compile Include="RequestParser\MultiPartFormDataParser.cs" />
+    <Compile Include="RequestParser\UrlEncodedBodyDataParseCommand.cs" />
     <Compile Include="Router\Interface\IRouteSelector.cs" />
     <Compile Include="Router\RouteSelector.cs" />
     <Compile Include="Router\RouteTable.cs" />
@@ -72,9 +76,7 @@
     <Compile Include="Utils\StreamUtil.cs" />
     <Compile Include="Utils\SubsenquenceFinder.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="SerivceChannel\Interface\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

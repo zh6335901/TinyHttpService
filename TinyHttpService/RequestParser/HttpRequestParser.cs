@@ -15,14 +15,14 @@ namespace TinyHttpService.RequestParser
 {
     public class HttpRequestParser : IHttpRequestParser
     {
-        public HttpRequest Parse(NetworkStream stream)
+        public HttpRequest Parse(Stream stream)
         {
             HttpRequest request = new HttpRequest();
             HttpHeader header = new HttpHeader();
             HttpRequestBody body;
 
             string startLine = ReadLine(stream);
-            var startLineRule = new Regex(@"^(GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT) (.+) HTTP/1.1$");
+            var startLineRule = new Regex(@"^(GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT|OPTION) (.+) HTTP/1.1$");
 
             if (startLineRule.IsMatch(startLine))
             {
@@ -78,7 +78,7 @@ namespace TinyHttpService.RequestParser
         }
 
 
-        private string ReadLine(NetworkStream stream)
+        private string ReadLine(Stream stream)
         {
             return stream.ReadLine();
         }
