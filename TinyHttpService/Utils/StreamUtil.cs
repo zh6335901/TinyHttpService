@@ -38,7 +38,31 @@ namespace TinyHttpService.Utils
                 }
             }
 
-            return string.Empty;
+            return Encoding.Default.GetString(bytes.ToArray());
+        }
+
+        /// <summary>
+        /// 从流中读取一行，并且去除换行符
+        /// </summary>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public static String ReadRawLine(this Stream stream)
+        {
+            var bytes = new List<byte>();
+            int value = -1;
+            string line = string.Empty;
+
+            while ((value = stream.ReadByte()) != -1)
+            {
+                bytes.Add(Convert.ToByte(value));
+
+                if (value == '\n')
+                {
+                    break;
+                }
+            }
+
+            return Encoding.Default.GetString(bytes.ToArray());
         }
 
         public static void Write(this Stream stream, string str)

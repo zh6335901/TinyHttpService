@@ -56,15 +56,13 @@ namespace TinyHttpService.RequestParser
             string line = reader.ReadLine();
             while (!this.readEndBoundary)
             {
-                if (line == boundary)
-                {
-                    break;
-                }
-
                 string partHeader = string.Empty;
                 while ((line = reader.ReadLine()) != string.Empty)
                 {
-                    partHeader += line;
+                    if (line != boundary) 
+                    {
+                        partHeader += line;
+                    }
                 }
 
                 Dictionary<string, string> partHeaders = partHeader.Replace("\r\n", ";").Split(';')
@@ -72,7 +70,6 @@ namespace TinyHttpService.RequestParser
                                         .ToDictionary(
                                             x => x[0].Trim().Replace("\"", string.Empty).ToLower(),
                                             x => x[1].Trim().Replace("\"", string.Empty));
-
 
                 if (!partHeaders.ContainsKey("filename"))
                 {
@@ -89,13 +86,12 @@ namespace TinyHttpService.RequestParser
         private void ParseParameterPart(RebufferableStreamReader reader, Dictionary<string, string> partHeaders)
         {
             StringBuilder value = new StringBuilder();
-            string line = string.Empty;
-            do
+            string line = reader.ReadLine();
+            while (line != endBoundary && line != boundary)
             {
-                line = reader.ReadLine();
                 value.Append(line);
+                line = reader.ReadLine();
             }
-            while (line != endBoundary && line != boundary);
 
             if (line == endBoundary)
             {
@@ -154,8 +150,8 @@ namespace TinyHttpService.RequestParser
 
                 if (endPos != -1)
                 { 
-                    //读到part结束，注意要处理多读出来的部分
-                    ms.Write(fullBuffer, 0, endPos);
+                    //这里endPos减2的原因是去除CRLF
+                    ms.Write(fullBuffer, 0, endPos - 2);
                     var rebuffer = new byte[fullBuffer.Length - endPos];
                     Buffer.BlockCopy(fullBuffer, endPos, rebuffer, 0, rebuffer.Length);
                     reader.Rebuffer(rebuffer);
