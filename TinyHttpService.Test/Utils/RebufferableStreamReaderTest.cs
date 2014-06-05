@@ -14,7 +14,7 @@ namespace TinyHttpService.Test.Utils
         private static readonly string noLineBufferTestString = "this buffer no line";
 
         [TestMethod]
-        public void CanReadLineWhenReaderNoBuffer()
+        public void ReadLineWhenReaderNoBuffer()
         {
             using (var ms = new MemoryStream(Encoding.Default.GetBytes(readerTestString))) 
             {
@@ -28,7 +28,7 @@ namespace TinyHttpService.Test.Utils
         }
 
         [TestMethod]
-        public void CanReadLineWhenLineInBuffer() 
+        public void ReadLineWhenLineInBuffer() 
         {
             using (var ms = new MemoryStream(Encoding.Default.GetBytes(readerTestString)))
             {
@@ -49,7 +49,7 @@ namespace TinyHttpService.Test.Utils
             }
         }
 
-        public void CanReadLineWhenReaderHaveBufferAndNoLineInBuffer() 
+        public void ReadLineWhenReaderHaveBufferAndNoLineInBuffer() 
         {
             using (var ms = new MemoryStream(Encoding.Default.GetBytes(readerTestString)))
             {
