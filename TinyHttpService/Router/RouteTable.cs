@@ -42,76 +42,31 @@ namespace TinyHttpService.Router
 
         public RouteTable All(string url, Func<HttpContext, ActionResult> func)
         {
-            var action = AllActions[url];
-            if (action != null)
-            {
-                action += func;
-            }
-            else
-            {
-                action = func;
-            }
-
+            AllActions[url] = func;
             return this;
         }
 
         public RouteTable Get(string url, Func<HttpContext, ActionResult> func)
         {
-            var action = GetActions[url];
-            if (action != null)
-            {
-                action += func;
-            }
-            else
-            {
-                action = func;
-            }
-
+            GetActions[url] = func;
             return this;
         }
 
         public RouteTable Post(string url, Func<HttpContext, ActionResult> func)
         {
-            var action = GetActions[url];
-            if (action != null)
-            {
-                action += func;
-            }
-            else
-            {
-                action = func;
-            }
-
+            PostActions[url] = func;
             return this;
         }
 
         public RouteTable Put(string url, Func<HttpContext, ActionResult> func)
         {
-            var action = GetActions[url];
-            if (action != null)
-            {
-                action += func;
-            }
-            else
-            {
-                action = func;
-            }
-
+            PutActions[url] = func;
             return this;
         }
 
         public RouteTable Delete(string url, Func<HttpContext, ActionResult> func)
         {
-            var action = GetActions[url];
-            if (action != null)
-            {
-                action += func;
-            }
-            else
-            {
-                action = func;
-            }
-
+            DeleteActions[url] = func;
             return this;
         }
     }

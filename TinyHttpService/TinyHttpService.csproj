@@ -49,7 +49,6 @@
     <Compile Include="ActionResults\JsonResult.cs" />
     <Compile Include="ActionResults\RedirectResult.cs" />
     <Compile Include="ActionResults\ViewResult.cs" />
-    <Compile Include="Attributes\HttpMethodAttribute.cs" />
     <Compile Include="HttpData\HttpContext.cs" />
     <Compile Include="HttpData\HttpRequest.cs" />
     <Compile Include="HttpData\HttpRequestBody.cs" />
@@ -57,6 +56,7 @@
     <Compile Include="HttpData\HttpResponse.cs" />
     <Compile Include="HttpData\HttpStatusCodes.cs" />
     <Compile Include="HttpData\FilePart.cs" />
+    <Compile Include="RequestParser\BodyParseCommandFactory.cs" />
     <Compile Include="RequestParser\HttpRequestParser.cs" />
     <Compile Include="Core\TinyHttpServiceBase.cs" />
     <Compile Include="Core\TinyHttpServiceHandler.cs" />
@@ -68,6 +68,7 @@
     <Compile Include="RequestParser\JsonBodyDataParseCommand.cs" />
     <Compile Include="RequestParser\MultiPartFormDataParseCommand.cs" />
     <Compile Include="RequestParser\MultiPartFormDataParser.cs" />
+    <Compile Include="RequestParser\NonBodyDataParseCommand.cs" />
     <Compile Include="RequestParser\UrlEncodedBodyDataParseCommand.cs" />
     <Compile Include="Router\Interface\IRouteSelector.cs" />
     <Compile Include="Router\RouteSelector.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Utils\RebufferableStreamReader.cs" />
     <Compile Include="Utils\StreamUtil.cs" />
     <Compile Include="Utils\SubsenquenceFinder.cs" />
+    <Compile Include="Utils\UrlHelper.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

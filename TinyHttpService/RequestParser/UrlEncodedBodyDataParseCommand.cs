@@ -15,16 +15,21 @@ namespace TinyHttpService.RequestParser
         public override HttpRequestBody Execute(Stream stream)
         {
             string line;
+            StringBuilder formBodySb = new StringBuilder();
             HttpRequestBody body = new HttpRequestBody();
 
-            while (string.IsNullOrEmpty(line = stream.ReadLine()))
+            while (!string.IsNullOrEmpty(line = stream.ReadLine()))
             {
-                var bodyProperties = line.Split('&');
-                foreach (var bodyProperty in bodyProperties)
-                {
-                    var keyValuePair = bodyProperty.Split('=');
-                    body[keyValuePair[0]] = keyValuePair[1];
-                }
+                formBodySb.Append(line);
+            }
+
+            var bodyString = formBodySb.ToString();
+            bodyString = UrlHelper.UrlDecode(bodyString, Encoding.Default);
+            var bodyProperties = line.Split('&');
+            foreach (var bodyProperty in bodyProperties)
+            {
+                var keyValuePair = bodyProperty.Split('=');
+                body[keyValuePair[0]] = keyValuePair[1];
             }
 
             return body;

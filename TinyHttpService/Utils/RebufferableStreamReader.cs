@@ -87,29 +87,39 @@ namespace TinyHttpService.Utils
                 throw new ArgumentNullException("bytes");
             }
 
+            if (offset < 0)
+            {
+                throw new ArgumentOutOfRangeException("offset必须大于0");
+            }
+
+            if (offset + length > bytes.Length) 
+            {
+                throw new ArgumentOutOfRangeException("bytes长度必须大于offset与length之和");
+            }
+
             if (buffer != null)
             {
-                if (buffer.Length > bytes.Length)
+                if (buffer.Length > length)
                 {
-                    Buffer.BlockCopy(buffer, 0, bytes, 0, bytes.Length);
+                    Buffer.BlockCopy(buffer, 0, bytes, offset, length);
                     var newBuffer = new byte[buffer.Length - bytes.Length];
                     Buffer.BlockCopy(buffer, bytes.Length, newBuffer, 0, newBuffer.Length);
                     buffer = newBuffer;
-                    return bytes.Length;
+                    return length;
                 }
-                else if (buffer.Length < bytes.Length)
+                else if (buffer.Length < length)
                 {
-                    int readCount = stream.Read(bytes, buffer.Length, bytes.Length - buffer.Length);
-                    Buffer.BlockCopy(buffer, 0, bytes, 0, buffer.Length);
+                    int readCount = stream.Read(bytes, buffer.Length, length - buffer.Length);
+                    Buffer.BlockCopy(buffer, 0, bytes, offset, buffer.Length);
                     readCount += buffer.Length;
                     buffer = null;
                     return readCount;
                 }
                 else
                 {
-                    Buffer.BlockCopy(buffer, 0, bytes, 0, buffer.Length);
+                    Buffer.BlockCopy(buffer, 0, bytes, offset, length);
                     buffer = null;
-                    return bytes.Length;
+                    return length;
                 }
             }
             else

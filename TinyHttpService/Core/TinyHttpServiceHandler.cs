@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net.Sockets;
 using System.Text;
@@ -26,7 +27,7 @@ namespace TinyHttpService.Implement
             this.routeSelector = routeSelector;
         }
 
-        public void ProcessRequest(NetworkStream stream)
+        public void ProcessRequest(Stream stream)
         {
             RouteTable.Instance.GetActions["/login"] = (httpContext) =>
             {

@@ -19,9 +19,8 @@ namespace TinyHttpService.RequestParser
         {
             HttpRequest request = new HttpRequest();
             HttpHeader header = new HttpHeader();
-            HttpRequestBody body;
 
-            string startLine = ReadLine(stream);
+            string startLine = stream.ReadLine();
             var startLineRule = new Regex(@"^(GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT|OPTION) (.+) HTTP/1.1$");
 
             if (startLineRule.IsMatch(startLine))
@@ -33,7 +32,7 @@ namespace TinyHttpService.RequestParser
 
             string line;
             var headerPropertyRule = new Regex(@"(.+?):(.+)");
-            while ((line = ReadLine(stream)) != Environment.NewLine)
+            while ((line = stream.ReadLine()) != Environment.NewLine)
             {
                 if (headerPropertyRule.IsMatch(line))
                 {
@@ -44,43 +43,21 @@ namespace TinyHttpService.RequestParser
 
             request.Header = header;
 
-            //非GET请求            
-            if (request.RequestMethod != "GET")
-            {
-                body = new HttpRequestBody();
+            HttpRequestBody body = new HttpRequestBody();
            
-                if (header["Content-Type"] != null && 
-                        header["Content-Type"].Contains("multipart/form-data"))
-                {
-                    var match = new Regex(@"boundary=(.+)").Match(header["Content-Type"]);
-                    string boundaryKey = match.Groups[1].Value;
-
-                    MultiPartFormDataParser multiPartFormDataparser = 
-                                                new MultiPartFormDataParser(stream, boundaryKey);
-                    
-                }
-                else
-                {
-                    while (string.IsNullOrEmpty(line = ReadLine(stream)))
-                    {
-                        var bodyProperties = line.Split('&');
-                        foreach (var bodyProperty in bodyProperties)
-                        {
-                            var keyValuePair = bodyProperty.Split('=');
-                            body[keyValuePair[0]] = keyValuePair[1];
-                        }
-                    }
-                }
-                request.Body = body;
+            if (header["Content-Type"] != null)
+            {
+                RequestBodyDataParseCommand command = 
+                            BodyParseCommandFactory.GetBodyParseCommand(header["Content-Type"]);
+                body = command.Execute(stream);
             }
+            else
+            {
+                throw new InvalidDataException("Content-Type can't be null");
+            }
+            request.Body = body;
 
             return request;
-        }
-
-
-        private string ReadLine(Stream stream)
-        {
-            return stream.ReadLine();
         }
     }
 }

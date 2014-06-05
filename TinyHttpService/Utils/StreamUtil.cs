@@ -15,30 +15,16 @@ namespace TinyHttpService.Utils
         /// <returns></returns>
         public static string ReadLine(this Stream stream)
         {
-            var bytes = new List<byte>();
-            int value = -1;
-            string line = string.Empty;
-
-            while ((value = stream.ReadByte()) != -1)
+            var line = stream.ReadRawLine();
+            if (line.Contains("\r\n"))
             {
-                bytes.Add(Convert.ToByte(value));
-
-                if (value == '\n')
-                {
-                    line = Encoding.Default.GetString(bytes.ToArray());
-                    if (line.Contains("\r\n"))
-                    {
-                        line = line.Substring(0, line.Length - 2);
-                    }
-                    else
-                    {
-                        line = line.Substring(0, line.Length - 1);
-                    }
-                    return line;
-                }
+                line = line.Substring(0, line.Length - 2);
             }
-
-            return Encoding.Default.GetString(bytes.ToArray());
+            else if (line.Contains('\n'))
+            {
+                line = line.Substring(0, line.Length - 1);
+            }
+            return line;
         }
 
         /// <summary>

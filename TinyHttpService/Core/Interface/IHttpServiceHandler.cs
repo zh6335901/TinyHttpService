@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,6 +9,6 @@ namespace TinyHttpService.Core.Interface
 {
     public interface IHttpServiceHandler
     {
-        void ProcessRequest(NetworkStream stream);
+        void ProcessRequest(Stream stream);
     }
 }

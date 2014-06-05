@@ -47,6 +47,8 @@ namespace TinyHttpService.Core
                         finally
                         {
                             stream.Close();
+                            //这边有疑问，现在http 1.1协议下默认是keep-alive的
+                            //所以我是否可以使用timer来延迟一段时间再关闭连接呢
                             tcpClient.Close();
                         }
 
