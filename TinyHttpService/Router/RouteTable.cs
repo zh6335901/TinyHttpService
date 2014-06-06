@@ -69,5 +69,25 @@ namespace TinyHttpService.Router
             DeleteActions[url] = func;
             return this;
         }
+
+        public Dictionary<string, Func<HttpContext, ActionResult>> this[String method] 
+        {
+            get 
+            {
+                switch (method.ToUpper()) 
+                {
+                    case "GET":
+                        return GetActions;
+                    case "POST":
+                        return PostActions;
+                    case "PUT":
+                        return PutActions;
+                    case "DELETE":
+                        return DeleteActions;
+                    default:
+                        return new Dictionary<string,Func<HttpContext,ActionResult>>();
+                }
+            }
+        }
     }
 }

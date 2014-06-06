@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TinyHttpService.Router;
 
 namespace TinyHttpService.HttpData
 {
@@ -13,5 +14,6 @@ namespace TinyHttpService.HttpData
 
         public HttpHeader Header { get; internal set; }
         public HttpRequestBody Body { get; internal set; }
+        public RouteData RouteData { get; internal set; }
     }
 }

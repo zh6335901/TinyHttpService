@@ -32,7 +32,7 @@ namespace TinyHttpService.RequestParser
 
             string line;
             var headerPropertyRule = new Regex(@"(.+?):(.+)");
-            while ((line = stream.ReadLine()) != Environment.NewLine)
+            while ((line = stream.ReadLine()) != String.Empty)
             {
                 if (headerPropertyRule.IsMatch(line))
                 {
@@ -42,19 +42,11 @@ namespace TinyHttpService.RequestParser
             }
 
             request.Header = header;
-
-            HttpRequestBody body = new HttpRequestBody();
            
-            if (header["Content-Type"] != null)
-            {
-                RequestBodyDataParseCommand command = 
-                            BodyParseCommandFactory.GetBodyParseCommand(header["Content-Type"]);
-                body = command.Execute(stream);
-            }
-            else
-            {
-                throw new InvalidDataException("Content-Type can't be null");
-            }
+            RequestBodyDataParseCommand command = 
+                        BodyParseCommandFactory.GetBodyParseCommand(header["Content-Type"]);
+            HttpRequestBody body = command.Execute(stream);
+
             request.Body = body;
 
             return request;

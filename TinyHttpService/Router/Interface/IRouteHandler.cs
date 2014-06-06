@@ -8,9 +8,9 @@ using TinyHttpService.HttpData;
 
 namespace TinyHttpService.Router.Interface
 {
-    public interface IRouteSelector
+    public interface IRouteHandler
     {
         RouteTable Routes { get; }
-        Func<HttpContext, ActionResult> Select(HttpRequest request);
+        Func<HttpContext, ActionResult> Handle(HttpRequest request);
     }
 }

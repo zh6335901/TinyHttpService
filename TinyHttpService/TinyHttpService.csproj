@@ -57,6 +57,7 @@
     <Compile Include="HttpData\HttpStatusCodes.cs" />
     <Compile Include="HttpData\FilePart.cs" />
     <Compile Include="RequestParser\BodyParseCommandFactory.cs" />
+    <Compile Include="RequestParser\HttpRequestParseException.cs" />
     <Compile Include="RequestParser\HttpRequestParser.cs" />
     <Compile Include="Core\TinyHttpServiceBase.cs" />
     <Compile Include="Core\TinyHttpServiceHandler.cs" />
@@ -70,8 +71,11 @@
     <Compile Include="RequestParser\MultiPartFormDataParser.cs" />
     <Compile Include="RequestParser\NonBodyDataParseCommand.cs" />
     <Compile Include="RequestParser\UrlEncodedBodyDataParseCommand.cs" />
-    <Compile Include="Router\Interface\IRouteSelector.cs" />
-    <Compile Include="Router\RouteSelector.cs" />
+    <Compile Include="Router\Interface\IRouteHandler.cs" />
+    <Compile Include="Router\RouteData.cs" />
+    <Compile Include="Router\RouteHandler.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Router\RouteTable.cs" />
     <Compile Include="Utils\RebufferableStreamReader.cs" />
     <Compile Include="Utils\StreamUtil.cs" />

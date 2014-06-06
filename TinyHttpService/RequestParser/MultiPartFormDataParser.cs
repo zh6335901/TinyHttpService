@@ -110,7 +110,6 @@ namespace TinyHttpService.RequestParser
             int curLength = 0;
             int prevLength = reader.Read(prevBuffer, 0, prevBuffer.Length);
             int endPos = -1;
-            int endPosLength = 0;
 
             do
             {
@@ -127,24 +126,20 @@ namespace TinyHttpService.RequestParser
                     if (boundaryPos < endBoundaryPos)
                     {
                         endPos = boundaryPos;
-                        endPosLength = boundaryBytes.Length;
                     }
                     else
                     {
                         endPos = endBoundaryPos;
-                        endPosLength = endBoundaryBytes.Length;
                         this.readEndBoundary = true;
                     }
                 }
                 else if (boundaryPos >= 0 && endBoundaryPos < 0)
                 {
                     endPos = boundaryPos;
-                    endPosLength = boundaryBytes.Length;
                 }
                 else if (endBoundaryPos >= 0 && boundaryPos < 0)
                 {
                     endPos = endBoundaryPos;
-                    endPosLength = endBoundaryBytes.Length;
                     this.readEndBoundary = true;
                 }
 

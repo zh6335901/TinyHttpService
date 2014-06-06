@@ -19,9 +19,9 @@ namespace TinyHttpService.Implement
     public class TinyHttpServiceHandler : IHttpServiceHandler
     {
         private IHttpRequestParser requestParser;
-        private IRouteSelector routeSelector;
+        private IRouteHandler routeSelector;
 
-        public TinyHttpServiceHandler(IHttpRequestParser requestParser, IRouteSelector routeSelector)
+        public TinyHttpServiceHandler(IHttpRequestParser requestParser, IRouteHandler routeSelector)
         {
             this.requestParser = requestParser;
             this.routeSelector = routeSelector;
@@ -29,14 +29,6 @@ namespace TinyHttpService.Implement
 
         public void ProcessRequest(Stream stream)
         {
-            RouteTable.Instance.GetActions["/login"] = (httpContext) =>
-            {
-                JsonResult result = new JsonResult();
-                result.Data = new { Name = "zhanghao", Phone = "111111" };
-                return result;
-            };
-
-
             HttpRequest request = requestParser.Parse(stream);
             HttpResponse response = new HttpResponse(stream);
 
@@ -46,7 +38,7 @@ namespace TinyHttpService.Implement
                 Response = response
             };
 
-            var func = routeSelector.Select(request);
+            var func = routeSelector.Handle(request);
             if (func != null)
             {
                 ActionResult actionResult = func(context);
