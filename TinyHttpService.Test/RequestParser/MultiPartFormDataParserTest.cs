@@ -49,7 +49,7 @@ namespace TinyHttpService.Test.RequestParser
         {
             using (MemoryStream ms = new MemoryStream(Encoding.Default.GetBytes(multiParamsTestData)))
             {
-                MultiPartFormDataParser parser = new MultiPartFormDataParser(ms);
+                MultiPartFormDataParser parser = new MultiPartFormDataParser(ms, Encoding.Default);
                 Assert.AreEqual(parser.Parameters["text"], "textdata");
                 Assert.AreEqual(parser.Parameters["username"], "zhang");
             }
@@ -60,7 +60,7 @@ namespace TinyHttpService.Test.RequestParser
         {
             using (MemoryStream ms = new MemoryStream(Encoding.Default.GetBytes(multiFilesTestData)))
             {
-                MultiPartFormDataParser parser = new MultiPartFormDataParser(ms);
+                MultiPartFormDataParser parser = new MultiPartFormDataParser(ms, Encoding.Default);
                 Assert.AreEqual(parser.Files.Count, 2);
                 Assert.AreEqual(parser.Files[0].Filename, "first.txt");
                 Assert.AreEqual(parser.Files[0].Name, "file");
@@ -84,7 +84,7 @@ namespace TinyHttpService.Test.RequestParser
         {
             using (MemoryStream ms = new MemoryStream(Encoding.Default.GetBytes(multiParamsAndFilesTestData))) 
             {
-                MultiPartFormDataParser parser = new MultiPartFormDataParser(ms);
+                MultiPartFormDataParser parser = new MultiPartFormDataParser(ms, Encoding.Default);
                 Assert.AreEqual(parser.Parameters["text"], "textdata");
                 Assert.AreEqual(parser.Parameters["username"], "zhang");
 

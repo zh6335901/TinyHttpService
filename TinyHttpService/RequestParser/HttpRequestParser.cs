@@ -17,39 +17,68 @@ namespace TinyHttpService.RequestParser
     {
         public HttpRequest Parse(Stream stream)
         {
-            HttpRequest request = new HttpRequest();
-            HttpHeader header = new HttpHeader();
+            string startLine = stream.ReadLine(Encoding.UTF8);
 
-            string startLine = stream.ReadLine();
-            var startLineRule = new Regex(@"^(GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT|OPTION) (.+) HTTP/1.1$");
+            HttpRequest request = new HttpRequest();
+            var startLineRule = new Regex(@"^(GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT|OPTIONS) (.+) HTTP/1.1$");
 
             if (startLineRule.IsMatch(startLine))
             {
                 var match = startLineRule.Match(startLine);
                 request.RequestMethod = match.Groups[1].Value.Trim();
-                request.Uri = match.Groups[2].Value.Trim();
+                request.Uri = UrlHelper.UrlDecode(match.Groups[2].Value.Trim(), Encoding.UTF8);
+                request.QueryString = UrlHelper.GetQueryString(request.Uri);
+            }
+            else 
+            {
+                throw new HttpRequestParseException("http格式错误");
             }
 
+            request.Header = GetHttpHeader(stream);
+
+            Encoding encoding = GetBodyEncoding(request.Header["Content-Type"] ?? string.Empty);
+           
+            RequestBodyDataParseCommand command = 
+                        BodyParseCommandFactory.GetBodyParseCommand(request.Header["Content-Type"]);
+            HttpRequestBody body = command.Execute(stream, encoding);
+
+            request.Body = body;
+            return request;
+        }
+
+        private static HttpHeader GetHttpHeader(Stream stream)
+        {
+            HttpHeader header = new HttpHeader();
             string line;
             var headerPropertyRule = new Regex(@"(.+?):(.+)");
-            while ((line = stream.ReadLine()) != String.Empty)
+            while ((line = stream.ReadLine(Encoding.UTF8)) != String.Empty)
             {
                 if (headerPropertyRule.IsMatch(line))
                 {
                     var match = headerPropertyRule.Match(line);
                     header[match.Groups[1].Value.Trim()] = match.Groups[2].Value.Trim();
                 }
+                else 
+                {
+                    throw new HttpRequestParseException("http头部格式错误");
+                }
             }
 
-            request.Header = header;
-           
-            RequestBodyDataParseCommand command = 
-                        BodyParseCommandFactory.GetBodyParseCommand(header["Content-Type"]);
-            HttpRequestBody body = command.Execute(stream);
+            return header;
+        }
 
-            request.Body = body;
+        private static Encoding GetBodyEncoding(string contentType)
+        {
+            var regex = new Regex(@"charset=([A-Za-z0-9\-]+)");
+            string charset = string.Empty;
 
-            return request;
+            if (regex.IsMatch(contentType))
+            {
+                var matcher = regex.Match(contentType);
+                charset = matcher.Groups[1].Value;
+            }
+            Encoding encoding = charset == string.Empty ? Encoding.UTF8 : Encoding.GetEncoding(charset);
+            return encoding;
         }
     }
 }

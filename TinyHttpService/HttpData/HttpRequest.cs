@@ -9,11 +9,12 @@ namespace TinyHttpService.HttpData
 {
     public class HttpRequest
     {
-        public string RequestMethod { get; internal set; }
-        public string Uri { get; internal set; }
+        public string RequestMethod { get; set; }
+        public string Uri { get; set; }
 
-        public HttpHeader Header { get; internal set; }
-        public HttpRequestBody Body { get; internal set; }
-        public RouteData RouteData { get; internal set; }
+        public HttpHeader Header { get; set; }
+        public HttpRequestBody Body { get; set; }
+        public RouteData RouteData { get; set; }
+        public Dictionary<string, string> QueryString { get; set; }
     }
 }

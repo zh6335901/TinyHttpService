@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,9 +14,9 @@ namespace TinyHttpService.Utils
         /// 从当前流的位置开始读取一行
         /// </summary>
         /// <returns></returns>
-        public static string ReadLine(this Stream stream)
+        public static string ReadLine(this Stream stream, Encoding e)
         {
-            var line = stream.ReadRawLine();
+            var line = stream.ReadRawLine(e);
             if (line.Contains("\r\n"))
             {
                 line = line.Substring(0, line.Length - 2);
@@ -32,13 +33,24 @@ namespace TinyHttpService.Utils
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>
-        public static String ReadRawLine(this Stream stream)
+        public static String ReadRawLine(this Stream stream, Encoding e)
         {
             var bytes = new List<byte>();
             int value = -1;
             string line = string.Empty;
 
-            while ((value = stream.ReadByte()) != -1)
+            NetworkStream networkStream = stream as NetworkStream;
+            if (networkStream != null)
+            {
+                if (!networkStream.DataAvailable)
+                {
+                    return string.Empty;
+                }
+            }
+
+            while (stream.CanRead 
+                    && (networkStream == null || networkStream.DataAvailable) 
+                    && (value = stream.ReadByte()) != -1)
             {
                 bytes.Add(Convert.ToByte(value));
 
@@ -48,7 +60,7 @@ namespace TinyHttpService.Utils
                 }
             }
 
-            return Encoding.Default.GetString(bytes.ToArray());
+            return e.GetString(bytes.ToArray());
         }
 
         public static void Write(this Stream stream, string str)

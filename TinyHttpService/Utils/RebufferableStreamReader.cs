@@ -11,13 +11,16 @@ namespace TinyHttpService.Utils
     {
         private byte[] buffer;
         private Stream stream;
+        private Encoding encoding;
 
-        public RebufferableStreamReader(Stream stream)
+        public RebufferableStreamReader(Stream stream, Encoding e)
         {
             if (stream == null)
             {
                 throw new ArgumentNullException("stream");
             }
+
+            this.encoding = e ?? Encoding.UTF8;
             this.stream = stream;
         }
 
@@ -37,7 +40,7 @@ namespace TinyHttpService.Utils
         {
             if (buffer == null || buffer.Length == 0)
             {
-                return stream.ReadLine();
+                return stream.ReadLine(encoding);
             }
             else 
             {
@@ -51,7 +54,7 @@ namespace TinyHttpService.Utils
                         Array.Copy(buffer, i + 1, newBuffer, 0, buffer.Length - i - 1);
                         buffer = newBuffer;
 
-                        var line = Encoding.Default.GetString(lineBytes);
+                        var line = encoding.GetString(lineBytes);
                         if (line.Contains("\r\n"))
                         {
                             return line.Substring(0, line.Length - 2);
@@ -63,7 +66,7 @@ namespace TinyHttpService.Utils
                     }
                 }
 
-                var l = Encoding.Default.GetString(buffer) + stream.ReadRawLine();
+                var l = encoding.GetString(buffer) + stream.ReadRawLine(encoding);
                 buffer = null;
                 if (l.Contains("\r\n"))
                 {

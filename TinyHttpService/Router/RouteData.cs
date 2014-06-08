@@ -20,7 +20,12 @@ namespace TinyHttpService.Router
         {
             get 
             {
-                return DataTokens[key];
+                if (DataTokens.ContainsKey(key))
+                {
+                    return DataTokens[key];
+                }
+
+                return null;
             }
             set 
             {

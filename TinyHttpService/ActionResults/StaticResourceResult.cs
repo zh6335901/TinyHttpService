@@ -9,11 +9,11 @@ using TinyHttpService.HttpData;
 
 namespace TinyHttpService.ActionResults
 {
-    public class DownloadResult : ActionResult
+    public class StaticResourceResult : ActionResult
     {
         public string FilePath { get; set; }
 
-        public DownloadResult(string path)
+        public StaticResourceResult(string path) 
         {
             this.FilePath = path;
         }
@@ -21,19 +21,18 @@ namespace TinyHttpService.ActionResults
         public override void Execute(HttpContext context)
         {
             var fullpath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, FilePath.TrimStart('/', '\\'));
-            if (File.Exists(fullpath))
+
+            if (File.Exists(fullpath)) 
             {
-                var response = context.Response;
-                var filename = Path.GetFileName(fullpath);
                 var ext = Path.GetExtension(fullpath);
 
+                var response = context.Response;
                 response.StatusCode = 200;
-                response.ContentType = Mime.Get(ext.ToLower()) ?? "application/octet-stream";
-                response.AddHeader("Content-Disposition", string.Format("attachment; filename={0}", filename));
+                response.ContentType = Mime.Get(ext) ?? "application/octet-stream";
 
                 var buffer = new byte[4096];
                 int readBytes = 0;
-                using (var fs = new FileStream(fullpath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                using (var fs = new FileStream(fullpath, FileMode.Open, FileAccess.Read, FileShare.Read)) 
                 {
                     response.AddHeader("Content-Length", fs.Length.ToString());
                     while ((readBytes = fs.Read(buffer, 0, 4096)) > 0)
@@ -44,7 +43,7 @@ namespace TinyHttpService.ActionResults
 
                 response.End();
             }
-            else
+            else 
             {
                 (new Http404NotFoundResult()).Execute(context);
             }

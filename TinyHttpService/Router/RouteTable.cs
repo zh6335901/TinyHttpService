@@ -70,10 +70,11 @@ namespace TinyHttpService.Router
             return this;
         }
 
-        public Dictionary<string, Func<HttpContext, ActionResult>> this[String method] 
+        public Dictionary<string, Func<HttpContext, ActionResult>> this[string method] 
         {
             get 
             {
+                method = method ?? string.Empty;
                 switch (method.ToUpper()) 
                 {
                     case "GET":

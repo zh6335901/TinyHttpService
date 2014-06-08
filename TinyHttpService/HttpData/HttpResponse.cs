@@ -62,6 +62,12 @@ namespace TinyHttpService.HttpData
             isHeaderWritten = true;
         }
 
+        public void End() 
+        {
+            ResponseStream.Flush();
+            ResponseStream.Close();
+        }
+
         public void Write(byte[] bytes)
         {
             if (!isHeaderWritten)
@@ -84,7 +90,7 @@ namespace TinyHttpService.HttpData
 
             if (!string.IsNullOrEmpty(str))
             {
-                ResponseStream.Write(str);
+                ResponseStream.Write(Encoding.UTF8.GetBytes(str), 0, Encoding.UTF8.GetByteCount(str));
             }
         }
 

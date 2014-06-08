@@ -18,7 +18,7 @@ namespace TinyHttpService.Test.RequestParser
 
             using (var ms = new MemoryStream(Encoding.Default.GetBytes(json)))
             {
-                var body = command.Execute(ms);
+                var body = command.Execute(ms, Encoding.Default);
                 Assert.AreEqual(body["Age"], "1");
                 Assert.AreEqual(body["Username"], "zhang");
                 Assert.AreEqual(body["Password"], "123456");

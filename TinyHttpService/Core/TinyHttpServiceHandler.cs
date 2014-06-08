@@ -10,6 +10,7 @@ using TinyHttpService.ActionResults.Interface;
 using TinyHttpService.Core;
 using TinyHttpService.Core.Interface;
 using TinyHttpService.HttpData;
+using TinyHttpService.RequestParser;
 using TinyHttpService.RequestParser.Interface;
 using TinyHttpService.Router;
 using TinyHttpService.Router.Interface;
@@ -19,18 +20,29 @@ namespace TinyHttpService.Implement
     public class TinyHttpServiceHandler : IHttpServiceHandler
     {
         private IHttpRequestParser requestParser;
-        private IRouteHandler routeSelector;
+        private IRouteHandler routeHandler;
 
-        public TinyHttpServiceHandler(IHttpRequestParser requestParser, IRouteHandler routeSelector)
+        public TinyHttpServiceHandler(IHttpRequestParser requestParser, IRouteHandler routeHandler)
         {
             this.requestParser = requestParser;
-            this.routeSelector = routeSelector;
+            this.routeHandler = routeHandler;
         }
 
         public void ProcessRequest(Stream stream)
         {
-            HttpRequest request = requestParser.Parse(stream);
             HttpResponse response = new HttpResponse(stream);
+            HttpRequest request = null;
+            try
+            {
+                request = requestParser.Parse(stream);
+            }
+            catch (HttpRequestParseException e) 
+            {
+                response.StatusCode = 400;
+                response.Write(e.Message);
+                response.End();
+                return;
+            }
 
             HttpContext context = new HttpContext 
             {
@@ -38,7 +50,7 @@ namespace TinyHttpService.Implement
                 Response = response
             };
 
-            var func = routeSelector.Handle(request);
+            var func = routeHandler.Handle(request);
             if (func != null)
             {
                 ActionResult actionResult = func(context);

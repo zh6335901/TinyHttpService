@@ -11,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D5DDA7AF-58E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{5163B556-6ECC-43B3-A536-F228FFDA4614}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TinyHttpService.Sample", "TinyHttpService.Sample\TinyHttpService.Sample.csproj", "{F176872C-0B31-41D5-9F6E-EDB954040BF1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{04C7119F-7716-4A7A-AFCC-626F8D1BDF73}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04C7119F-7716-4A7A-AFCC-626F8D1BDF73}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04C7119F-7716-4A7A-AFCC-626F8D1BDF73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F176872C-0B31-41D5-9F6E-EDB954040BF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F176872C-0B31-41D5-9F6E-EDB954040BF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F176872C-0B31-41D5-9F6E-EDB954040BF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F176872C-0B31-41D5-9F6E-EDB954040BF1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -32,5 +38,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{CA872E2D-4459-455A-9799-60596C57DE36} = {D5DDA7AF-58E1-4B81-B792-E481F325C2A3}
 		{04C7119F-7716-4A7A-AFCC-626F8D1BDF73} = {5163B556-6ECC-43B3-A536-F228FFDA4614}
+		{F176872C-0B31-41D5-9F6E-EDB954040BF1} = {D5DDA7AF-58E1-4B81-B792-E481F325C2A3}
 	EndGlobalSection
 EndGlobal

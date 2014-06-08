@@ -17,6 +17,7 @@ namespace TinyHttpService.RequestParser
         private readonly byte[] boundaryBytes;
         private readonly string endBoundary;
         private readonly byte[] endBoundaryBytes;
+        private readonly Encoding encoding;
 
         private bool readEndBoundary = false;
         private RebufferableStreamReader reader;
@@ -25,9 +26,11 @@ namespace TinyHttpService.RequestParser
         public List<FilePart> Files { get; set; }
         public Dictionary<string, string> Parameters { get; set; }
 
-        public MultiPartFormDataParser(Stream stream, string boundaryKey = null, int binaryBufferSize = DEFAULT_BUFFER_LENGTH)
+        public MultiPartFormDataParser(Stream stream, Encoding e, string boundaryKey = null, 
+                                    int binaryBufferSize = DEFAULT_BUFFER_LENGTH)
         {
-            reader = new RebufferableStreamReader(stream);
+            encoding = e ?? Encoding.UTF8;
+            reader = new RebufferableStreamReader(stream, encoding);
             if (string.IsNullOrEmpty(boundaryKey)) 
             {
                 boundaryKey = DetectBoundaryKey(reader);
@@ -35,8 +38,8 @@ namespace TinyHttpService.RequestParser
 
             boundary = string.Format("--{0}", boundaryKey);
             endBoundary = string.Format("--{0}--", boundaryKey);
-            boundaryBytes = Encoding.Default.GetBytes(boundary);
-            endBoundaryBytes = Encoding.Default.GetBytes(endBoundary);
+            boundaryBytes = encoding.GetBytes(boundary);
+            endBoundaryBytes = encoding.GetBytes(endBoundary);
 
             BinaryBufferSize = binaryBufferSize;
             Files = new List<FilePart>();
@@ -47,7 +50,7 @@ namespace TinyHttpService.RequestParser
         private string DetectBoundaryKey(RebufferableStreamReader reader)
         {
             var boundary = string.Concat(reader.ReadLine().Skip(2));
-            reader.Rebuffer(Encoding.Default.GetBytes("--" + boundary + "\r\n"));
+            reader.Rebuffer(encoding.GetBytes("--" + boundary + "\r\n"));
             return boundary;
         }
 
@@ -65,11 +68,19 @@ namespace TinyHttpService.RequestParser
                     }
                 }
 
-                Dictionary<string, string> partHeaders = partHeader.Replace("\r\n", ";").Split(';')
-                                        .Select(x => x.Split(new[] { ':', '=' }))
-                                        .ToDictionary(
-                                            x => x[0].Trim().Replace("\"", string.Empty).ToLower(),
-                                            x => x[1].Trim().Replace("\"", string.Empty));
+                Dictionary<string, string> partHeaders;
+                try
+                {
+                    partHeaders = partHeader.Replace("\r\n", ";").Split(';')
+                                            .Select(x => x.Split(new[] { ':', '=' }))
+                                            .ToDictionary(
+                                                x => x[0].Trim().Replace("\"", string.Empty).ToLower(),
+                                                x => x[1].Trim().Replace("\"", string.Empty));
+                }
+                catch 
+                {
+                    throw new HttpRequestParseException("http报文实体格式错误");
+                }
 
                 if (!partHeaders.ContainsKey("filename"))
                 {
@@ -169,6 +180,12 @@ namespace TinyHttpService.RequestParser
                 prevLength = curLength;
             }
             while (prevLength > 0);
+
+            if (endPos == -1)
+            {
+                ms.Close();
+                throw new HttpRequestParseException("http报文实体格式错误");
+            }
         }
     }
 }

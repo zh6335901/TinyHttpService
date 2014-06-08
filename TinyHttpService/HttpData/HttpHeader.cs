@@ -8,13 +8,18 @@ namespace TinyHttpService.HttpData
 {
     public class HttpHeader
     {
-        public Dictionary<string, string> Properties { get; internal set; }
+        public Dictionary<string, string> Properties { get; set; }
 
         public string this[string key]
         {
             get 
             {
-                return this.Properties[key];
+                if (this.Properties.ContainsKey(key))
+                {
+                    return this.Properties[key];
+                }
+
+                return null;
             }
             set 
             {

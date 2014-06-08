@@ -10,7 +10,7 @@ namespace TinyHttpService.RequestParser
 {
     public class NonBodyDataParseCommand : RequestBodyDataParseCommand
     {
-        public override HttpRequestBody Execute(Stream stream)
+        public override HttpRequestBody Execute(Stream stream, Encoding e)
         {
             return new HttpRequestBody();
         }

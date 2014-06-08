@@ -10,6 +10,6 @@ namespace TinyHttpService.RequestParser.Interface
 {
     public abstract class RequestBodyDataParseCommand
     {
-        public abstract HttpRequestBody Execute(Stream stream);
+        public abstract HttpRequestBody Execute(Stream stream, Encoding e);
     }
 }

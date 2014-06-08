@@ -26,10 +26,11 @@ namespace TinyHttpService.ActionResults
             }
 
             var response = context.Response;
-            response.ContentType = "text/plain";
+            response.ContentType = "text/plain; charset=utf-8";
             response.StatusCode = 200;
-            response.AddHeader("Content-Length", Encoding.Default.GetByteCount(Content).ToString());
+            response.AddHeader("Content-Length", Encoding.UTF8.GetByteCount(Content).ToString());
             response.Write(Content);
+            response.End();
         }
     }
 }

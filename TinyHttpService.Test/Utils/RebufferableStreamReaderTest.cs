@@ -18,7 +18,7 @@ namespace TinyHttpService.Test.Utils
         {
             using (var ms = new MemoryStream(Encoding.Default.GetBytes(readerTestString))) 
             {
-                RebufferableStreamReader reader = new RebufferableStreamReader(ms);
+                RebufferableStreamReader reader = new RebufferableStreamReader(ms, Encoding.Default);
                 string line = reader.ReadLine();
                 string nextLine = reader.ReadLine();
 
@@ -32,7 +32,7 @@ namespace TinyHttpService.Test.Utils
         {
             using (var ms = new MemoryStream(Encoding.Default.GetBytes(readerTestString)))
             {
-                RebufferableStreamReader reader = new RebufferableStreamReader(ms);
+                RebufferableStreamReader reader = new RebufferableStreamReader(ms, Encoding.Default);
                 reader.Rebuffer(Encoding.Default.GetBytes(lineBufferTestString));
 
                 var line = reader.ReadLine();
@@ -53,7 +53,7 @@ namespace TinyHttpService.Test.Utils
         {
             using (var ms = new MemoryStream(Encoding.Default.GetBytes(readerTestString)))
             {
-                RebufferableStreamReader reader = new RebufferableStreamReader(ms);
+                RebufferableStreamReader reader = new RebufferableStreamReader(ms, Encoding.Default);
                 reader.Rebuffer(Encoding.Default.GetBytes(noLineBufferTestString));
 
                 var line = reader.ReadLine();

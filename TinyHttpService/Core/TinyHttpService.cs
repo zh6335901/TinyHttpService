@@ -4,17 +4,18 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using TinyHttpService.Core.Interface;
 
 namespace TinyHttpService.Core
 {
-    public abstract class TinyHttpServiceBase : IHttpService
+    public class TinyHttpService : IHttpService
     {
         private TcpListener listener;
         private IHttpServiceHandler httpServiceHandler;
 
-        public TinyHttpServiceBase(IHttpServiceHandler handler)
+        public TinyHttpService(IHttpServiceHandler handler)
         {
             this.httpServiceHandler = handler;
         }
@@ -36,7 +37,7 @@ namespace TinyHttpService.Core
 
                 if (client != null)
                 {
-                    Task task = new Task(new Action<object>((obj) =>
+                    Thread task = new Thread((obj) =>
                     {
                         var tcpClient = obj as TcpClient;
                         var stream = tcpClient.GetStream();
@@ -47,14 +48,16 @@ namespace TinyHttpService.Core
                         finally
                         {
                             stream.Close();
-                            //这边有疑问，现在http 1.1协议下默认是keep-alive的
-                            //所以我是否可以使用timer来延迟一段时间再关闭连接呢
                             tcpClient.Close();
                         }
 
-                    }), client);
-                    task.Start();
+                    });
+                    task.Start(client);
                 }
+            }
+            catch (ObjectDisposedException)
+            {
+                // ignore
             }
             finally
             {

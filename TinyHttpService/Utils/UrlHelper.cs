@@ -37,7 +37,7 @@ namespace TinyHttpService.Utils
                 {
                     if (s[i + 1] == 'u' && i + 5 < len)
                     {
-                        // unicode hex sequence
+                        // unicode hex
                         xchar = GetChar(s, i + 2, 4);
                         if (xchar != -1)
                         {
@@ -120,6 +120,21 @@ namespace TinyHttpService.Utils
                 return c - 'A' + 10;
 
             return -1;
+        }
+
+        public static Dictionary<string, string> GetQueryString(string url)
+        {
+            string[] strArray = url.Split('?');
+            if (strArray.Length < 2) 
+            {
+                return new Dictionary<string, string>();
+            }
+
+            var queryString = strArray[1]
+                                .Split('&')
+                                .Select(s => s.Split('='))
+                                .ToDictionary(x => x[0], x => x[1]);
+            return queryString;
         }
     }
 }
