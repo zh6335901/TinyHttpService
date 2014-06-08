@@ -9,12 +9,6 @@ TinyHttpService
 首先注册路由:
 var routes = RouteTable.Instance;
 
-routes.Get("/user/:id", (context) =>
-{
-    Console.WriteLine(context.Request.RouteData["id"]);
-    return new ContentResult("hello");
-});
-
 routes.Get("/user", (context) =>
 {
     var user = new User();
@@ -31,12 +25,9 @@ routes.Post("/user", (context) =>
     return new ContentResult("haha");
 });
 
-routes.Get("/download", (context) =>
-{
-    return new DownloadResult("/file/8.png");
-});
-
 然后监听请求:
 TinyHttpService service = DefaultTinyHttpServiceFactory.GetDefaultTinyHttpService();
 service.Bind(5000);
+
+就这样！
 
