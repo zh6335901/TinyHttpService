@@ -29,5 +29,4 @@ TinyHttpService
     TinyHttpService service = DefaultTinyHttpServiceFactory.GetDefaultTinyHttpService();
     service.Bind(5000);
 
-就这样！
-
+提醒：如果在你的项目中创建了页面文件和其他的静态文件，你需要将它们输出到bin文件夹下。（右键文件，选择属性，在复制到输出目录下选择总是复制或者复制新文件)。
