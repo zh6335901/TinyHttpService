@@ -7,8 +7,10 @@ TinyHttpService
 ========
 
 首先注册路由:
+//全局路由表
 var routes = RouteTable.Instance;
 
+//GET /user
 routes.Get("/user", (context) =>
 {
     var user = new User();
@@ -16,6 +18,7 @@ routes.Get("/user", (context) =>
     return new ViewResult<User>("/view/razor.cshtml", user);
 });
 
+//POST /user
 routes.Post("/user", (context) =>
 {
     Console.WriteLine(context.Request.Body.ToString());
@@ -26,6 +29,7 @@ routes.Post("/user", (context) =>
 });
 
 然后监听请求:
+//监听
 TinyHttpService service = DefaultTinyHttpServiceFactory.GetDefaultTinyHttpService();
 service.Bind(5000);
 
