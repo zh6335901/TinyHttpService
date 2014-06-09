@@ -21,14 +21,30 @@ namespace TinyHttpService.ActionResults
         public override void Execute(HttpContext context)
         {
             var fullpath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, FilePath.TrimStart('/', '\\'));
+            var response = context.Response;
+            var request = context.Request;
 
             if (File.Exists(fullpath)) 
             {
-                var ext = Path.GetExtension(fullpath);
+                if (request.Header["If-Modified-Since"] != null)
+                {
+                    DateTime time;
+                    if (DateTime.TryParse(request.Header["If-Modified-Since"], out time))
+                    {
+                        if (time.Ticks >= File.GetLastWriteTimeUtc(fullpath).Ticks) 
+                        {
+                            response.StatusCode = 304;
+                            response.Write(string.Empty);
+                            response.End();
+                            return;
+                        }
+                    }
+                }
 
-                var response = context.Response;
+                var ext = Path.GetExtension(fullpath);
                 response.StatusCode = 200;
                 response.ContentType = Mime.Get(ext) ?? "application/octet-stream";
+                response.AddHeader("Last-Modified", File.GetLastWriteTime(fullpath).ToUniversalTime().ToString("r"));
 
                 var buffer = new byte[4096];
                 int readBytes = 0;

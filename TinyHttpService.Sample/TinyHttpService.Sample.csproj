@@ -50,6 +50,9 @@
   <ItemGroup>
     <None Include="App.config" />
     <Content Include="file\8.PNG" />
+    <Content Include="public\css\style.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="public\test.html" />
     <Content Include="view\razor.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

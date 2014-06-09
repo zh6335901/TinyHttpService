@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -37,27 +38,28 @@ namespace TinyHttpService.Core
 
                 if (client != null)
                 {
+                    var stream = client.GetStream();
+
                     Thread task = new Thread((obj) =>
                     {
-                        var tcpClient = obj as TcpClient;
-                        var stream = tcpClient.GetStream();
                         try
                         {
                             httpServiceHandler.ProcessRequest(stream);
                         }
+                        catch (IOException e) 
+                        {
+                            //ignore
+                        }
                         finally
                         {
                             stream.Close();
-                            tcpClient.Close();
+                            client.Close();
                         }
 
                     });
+                    task.IsBackground = true; 
                     task.Start(client);
                 }
-            }
-            catch (ObjectDisposedException)
-            {
-                // ignore
             }
             finally
             {

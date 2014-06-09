@@ -76,8 +76,8 @@ namespace TinyHttpService.Router
 
             foreach (var kv in routes)
             {
-            startMatch:
                 string[] routeArray = kv.Key.Split('/');
+                bool isMatch = true;
                 if (routeArray.Length == urlArray.Length)
                 {
                     for (int i = 0; i < routeArray.Length; i++)
@@ -91,12 +91,17 @@ namespace TinyHttpService.Router
                             if (routeArray[i] != urlArray[i])
                             {
                                 request.RouteData.DataTokens.Clear();
-                                goto startMatch;
+                                isMatch = false;
+                                continue;
                             }
                         }
                     }
-                    request.RouteData.RouteUri = kv.Key;
-                    return Routes[request.RequestMethod][kv.Key];
+
+                    if (isMatch)
+                    {
+                        request.RouteData.RouteUri = kv.Key;
+                        return Routes[request.RequestMethod][kv.Key];
+                    }
                 }
             }
 

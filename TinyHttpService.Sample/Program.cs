@@ -18,6 +18,7 @@ namespace TinyHttpService.Sample
             service.Bind(5000);
 
             Console.ReadKey();
+            //service.Close();
         }
 
         private static void RegisteRoute()
