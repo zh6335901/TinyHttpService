@@ -38,21 +38,25 @@ namespace TinyHttpService.Core
 
                 if (client != null)
                 {
-                    var stream = client.GetStream();
-
                     Thread task = new Thread((obj) =>
                     {
                         try
                         {
-                            httpServiceHandler.ProcessRequest(stream);
+                            while (client.Connected && (client.Client.Poll(01, SelectMode.SelectRead) 
+                                                            && client.Client.Poll(01, SelectMode.SelectWrite)
+                                                            && !client.Client.Poll(01, SelectMode.SelectError)))
+                            {
+                                if (client.GetStream().DataAvailable)
+                                {
+                                    httpServiceHandler.ProcessRequest(client.GetStream());
+                                }
+                            }
                         }
                         catch (IOException e) 
                         {
-                            //ignore
                         }
                         finally
                         {
-                            stream.Close();
                             client.Close();
                         }
 

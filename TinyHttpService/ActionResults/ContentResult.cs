@@ -30,7 +30,6 @@ namespace TinyHttpService.ActionResults
             response.StatusCode = 200;
             response.AddHeader("Content-Length", Encoding.UTF8.GetByteCount(Content).ToString());
             response.Write(Content);
-            response.End();
         }
     }
 }

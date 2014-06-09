@@ -21,7 +21,6 @@ namespace TinyHttpService.ActionResults
             response.StatusCode = 404;
             response.ContentType = "text/html";
             response.Write("<h1>Not Found</h1>");
-            response.End();
         }
     }
 }

@@ -18,7 +18,7 @@ namespace TinyHttpService.Sample
             service.Bind(5000);
 
             Console.ReadKey();
-            //service.Close();
+            service.Close();
         }
 
         private static void RegisteRoute()
@@ -29,7 +29,7 @@ namespace TinyHttpService.Sample
             {
                 Console.WriteLine(context.Request.RouteData["id"]);
 
-                return new ContentResult("张浩");
+                return new JsonResult(new User() { UserName = "张浩" });
             });
 
             routes.Post("/user", (context) =>

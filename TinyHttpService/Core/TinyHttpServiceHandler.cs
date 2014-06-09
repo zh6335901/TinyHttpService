@@ -40,7 +40,6 @@ namespace TinyHttpService.Implement
             {
                 response.StatusCode = 400;
                 response.Write(e.Message);
-                response.End();
                 return;
             }
 

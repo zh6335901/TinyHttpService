@@ -59,13 +59,8 @@ namespace TinyHttpService.HttpData
                                             StatusCode, HttpStatusCodes.StatusCodes[StatusCode], Header.ToString());
 
             ResponseStream.Write(head);
-            isHeaderWritten = true;
-        }
-
-        public void End() 
-        {
             ResponseStream.Flush();
-            ResponseStream.Close();
+            isHeaderWritten = true;
         }
 
         public void Write(byte[] bytes)
@@ -92,6 +87,8 @@ namespace TinyHttpService.HttpData
             {
                 ResponseStream.Write(Encoding.UTF8.GetBytes(str), 0, Encoding.UTF8.GetByteCount(str));
             }
+
+            ResponseStream.Flush();
         }
 
         private string contentType;

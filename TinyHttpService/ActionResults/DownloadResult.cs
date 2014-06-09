@@ -41,8 +41,6 @@ namespace TinyHttpService.ActionResults
                         response.Write(buffer);
                     }
                 }
-
-                response.End();
             }
             else
             {

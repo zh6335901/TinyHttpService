@@ -35,7 +35,6 @@ namespace TinyHttpService.ActionResults
                         {
                             response.StatusCode = 304;
                             response.Write(string.Empty);
-                            response.End();
                             return;
                         }
                     }
@@ -56,8 +55,6 @@ namespace TinyHttpService.ActionResults
                         response.Write(buffer);
                     }
                 }
-
-                response.End();
             }
             else 
             {

@@ -40,7 +40,6 @@ namespace TinyHttpService.ActionResults
             var json = JsonSerializer.SerializeToString(Data, Data.GetType());
             response.AddHeader("Content-Length", Encoding.UTF8.GetByteCount(json).ToString());
             response.Write(json);
-            response.End();
         }
     }
 }
