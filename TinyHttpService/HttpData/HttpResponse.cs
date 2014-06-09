@@ -30,7 +30,7 @@ namespace TinyHttpService.HttpData
         {
             if (isHeaderWritten)
             {
-                throw new InvalidOperationException("can't add header after headers sent.");
+                throw new InvalidOperationException("http头部已经发送，无法填加新的http头部");
             }
 
             this.Header[key] = value;
@@ -46,7 +46,7 @@ namespace TinyHttpService.HttpData
             {
                 if (HttpStatusCodes.StatusCodes[value] == null)
                 {
-                    throw new InvalidOperationException("Invalid status code");
+                    throw new InvalidOperationException("无效的状态码: " + value.ToString());
                 }
 
                 statusCode = value;
