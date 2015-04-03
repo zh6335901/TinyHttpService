@@ -36,11 +36,39 @@ namespace TinyHttpService.Utils
             }
         }
 
-        public string ReadLine()
+        public async Task<string> ReadLineAsync()
         {
             if (buffer == null || buffer.Length == 0)
             {
-                return stream.ReadLine(encoding);
+                var bytes = new byte[4096];
+                int readCount = await stream.ReadAsync(buffer, 0, bytes.Length);
+                if (readCount < bytes.Length)
+                {
+                    return encoding.GetString(bytes);
+                }
+                else 
+                {
+                    for (int i = 0; i < bytes.Length; i++) 
+                    {
+                        if (bytes[i] == '\n') 
+                        {
+                            var lineBytes = new byte[i + 1];
+                            buffer = new byte[bytes.Length - i - 1];
+                            Array.Copy(bytes, lineBytes, i + 1);
+                            Array.Copy(bytes, i + 1, buffer, 0, bytes.Length - i - 1);
+
+                            var line = encoding.GetString(lineBytes);
+                            if (line.Contains("\r\n"))
+                            {
+                                return line.Substring(0, line.Length - 2);
+                            }
+                            else
+                            {
+                                return line.Substring(0, line.Length - 1);
+                            }
+                        }
+                    }
+                }
             }
             else 
             {
@@ -66,24 +94,14 @@ namespace TinyHttpService.Utils
                     }
                 }
 
-                var l = encoding.GetString(buffer) + stream.ReadRawLine(encoding);
+                var lineEnd = await streamReader.ReadLineAsync();
+                var l = encoding.GetString(buffer) + lineEnd ?? string.Empty;
                 buffer = null;
-                if (l.Contains("\r\n"))
-                {
-                    return l.Substring(0, l.Length - 2);
-                }
-                else if (l.Contains('\n'))
-                {
-                    return l.Substring(0, l.Length - 1);
-                }
-                else 
-                {
-                    return l;
-                }
+                return l;
             }
         }
 
-        public int Read(byte[] bytes, int offset, int length)
+        public async Task<int> ReadAsync(byte[] bytes, int offset, int length)
         {
             if (bytes == null)
             {
@@ -111,8 +129,8 @@ namespace TinyHttpService.Utils
                     return length;
                 }
                 else if (buffer.Length < length)
-                {
-                    int readCount = stream.Read(bytes, buffer.Length, length - buffer.Length);
+                {             
+                    int readCount = await stream.ReadAsync(bytes, buffer.Length, length - buffer.Length);
                     Buffer.BlockCopy(buffer, 0, bytes, offset, buffer.Length);
                     readCount += buffer.Length;
                     buffer = null;
@@ -127,7 +145,7 @@ namespace TinyHttpService.Utils
             }
             else
             {
-                return stream.Read(bytes, offset, length);
+                return await stream.ReadAsync(bytes, offset, length);
             }
         }
 

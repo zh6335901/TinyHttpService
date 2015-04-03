@@ -14,6 +14,7 @@ namespace TinyHttpService.RequestParser
         public override async Task<HttpRequestBody> ExecuteAsync(Stream stream, Encoding e)
         {
             MultiPartFormDataParser parser = new MultiPartFormDataParser(stream, e);
+            await parser.ParseAsync();
             HttpRequestBody body = new HttpRequestBody();
             body.Properties = parser.Parameters;
             body.Files = parser.Files;

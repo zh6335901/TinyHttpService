@@ -17,7 +17,7 @@ namespace TinyHttpService.RequestParser
         {
             var reader = new StreamReader(stream);
             var bodyString = await reader.ReadToEndAsync();
-            Dictionary<string, string> dict = JsonSerializer.DeserializeFromStream<Dictionary<string, string>>(stream);
+            Dictionary<string, string> dict = JsonSerializer.DeserializeFromString<Dictionary<string, string>>(bodyString);
             HttpRequestBody body = new HttpRequestBody();
             body.Properties = dict;
             return body;

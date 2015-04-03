@@ -41,7 +41,7 @@ namespace TinyHttpService.RequestParser
            
             RequestBodyDataParseCommand command = 
                         BodyParseCommandFactory.GetBodyParseCommand(request.Header["Content-Type"]);
-            HttpRequestBody body = command.Execute(stream, encoding);
+            HttpRequestBody body = await command.ExecuteAsync(stream, encoding);
 
             request.Body = body;
             return request;

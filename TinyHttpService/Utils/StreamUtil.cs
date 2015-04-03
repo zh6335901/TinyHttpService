@@ -29,7 +29,7 @@ namespace TinyHttpService.Utils
         }
 
         /// <summary>
-        /// 从流中读取一行，并且去除换行符
+        /// 从流中读取一行，并且包含换行符
         /// </summary>
         /// <param name="stream"></param>
         /// <returns></returns>

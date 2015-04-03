@@ -13,10 +13,10 @@ namespace TinyHttpService.RequestParser
     {
         const int DEFAULT_BUFFER_LENGTH = 4096;
 
-        private readonly string boundary;
-        private readonly byte[] boundaryBytes;
-        private readonly string endBoundary;
-        private readonly byte[] endBoundaryBytes;
+        private string boundary;
+        private byte[] boundaryBytes;
+        private string endBoundary;
+        private byte[] endBoundaryBytes;
         private readonly Encoding encoding;
 
         private bool readEndBoundary = false;
@@ -31,9 +31,25 @@ namespace TinyHttpService.RequestParser
         {
             encoding = e ?? Encoding.UTF8;
             reader = new RebufferableStreamReader(stream, encoding);
-            if (string.IsNullOrEmpty(boundaryKey)) 
+
+            BinaryBufferSize = binaryBufferSize;
+            Files = new List<FilePart>();
+            Parameters = new Dictionary<string, string>();
+        }
+
+        private async Task<string> DetectBoundaryKey(RebufferableStreamReader reader)
+        {
+            var line = await reader.ReadLineAsync();
+            var boundary = string.Concat(line.Skip(2));
+            reader.Rebuffer(encoding.GetBytes("--" + boundary + "\r\n"));
+            return boundary;
+        }
+
+        public async Task ParseAsync(string boundaryKey = null)
+        {
+            if (string.IsNullOrEmpty(boundaryKey))
             {
-                boundaryKey = DetectBoundaryKey(reader);
+                boundaryKey = await DetectBoundaryKey(reader);
             }
 
             boundary = string.Format("--{0}", boundaryKey);
@@ -41,25 +57,11 @@ namespace TinyHttpService.RequestParser
             boundaryBytes = encoding.GetBytes(boundary);
             endBoundaryBytes = encoding.GetBytes(endBoundary);
 
-            BinaryBufferSize = binaryBufferSize;
-            Files = new List<FilePart>();
-            Parameters = new Dictionary<string, string>();
-        }
-
-        private string DetectBoundaryKey(RebufferableStreamReader reader)
-        {
-            var boundary = string.Concat(reader.ReadLine().Skip(2));
-            reader.Rebuffer(encoding.GetBytes("--" + boundary + "\r\n"));
-            return boundary;
-        }
-
-        private async Task ParseAsync()
-        {
-            string line = reader.ReadLine();
+            string line = await reader.ReadLineAsync();
             while (!this.readEndBoundary)
             {
                 string partHeader = string.Empty;
-                while ((line = reader.ReadLine()) != string.Empty)
+                while ((line = await reader.ReadLineAsync()) != null)
                 {
                     if (line != boundary) 
                     {
@@ -83,24 +85,24 @@ namespace TinyHttpService.RequestParser
 
                 if (!partHeaders.ContainsKey("filename"))
                 {
-                    ParseParameterPart(reader, partHeaders);
+                    await ParseParameterPartAsync(reader, partHeaders);
                 }
                 else
                 {
-                    ParseFilePart(reader, partHeaders);
+                    await ParseFilePartAsync(reader, partHeaders);
                 }
 
             }
         }
 
-        private void ParseParameterPart(RebufferableStreamReader reader, Dictionary<string, string> partHeaders)
+        private async Task ParseParameterPartAsync(RebufferableStreamReader reader, Dictionary<string, string> partHeaders)
         {
             StringBuilder value = new StringBuilder();
-            string line = reader.ReadLine();
+            string line = await reader.ReadLineAsync();
             while (line != endBoundary && line != boundary)
             {
                 value.Append(line);
-                line = reader.ReadLine();
+                line = await reader.ReadLineAsync();
             }
 
             if (line == endBoundary)
@@ -110,7 +112,7 @@ namespace TinyHttpService.RequestParser
             Parameters[partHeaders["name"]] = value.ToString();
         }
 
-        private void ParseFilePart(RebufferableStreamReader reader, Dictionary<string, string> partHeaders)
+        private async Task ParseFilePartAsync(RebufferableStreamReader reader, Dictionary<string, string> partHeaders)
         {
             //先使用内存存储吧，遇到大文件肯定是不行的
             MemoryStream ms = new MemoryStream();
@@ -118,12 +120,12 @@ namespace TinyHttpService.RequestParser
             var prevBuffer = new byte[this.BinaryBufferSize];
 
             int curLength = 0;
-            int prevLength = reader.Read(prevBuffer, 0, prevBuffer.Length);
+            int prevLength = await reader.ReadAsync(prevBuffer, 0, prevBuffer.Length);
             int endPos = -1;
 
             do
             {
-                curLength = reader.Read(curBuffer, 0, curBuffer.Length);
+                curLength = await reader.ReadAsync(curBuffer, 0, curBuffer.Length);
                 var fullBuffer = new Byte[prevLength + curLength];
                 Buffer.BlockCopy(prevBuffer, 0, fullBuffer, 0, prevLength);
                 Buffer.BlockCopy(curBuffer, 0, fullBuffer, prevLength, curLength);
