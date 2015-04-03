@@ -15,9 +15,10 @@ namespace TinyHttpService.RequestParser
 {
     public class HttpRequestParser : IHttpRequestParser
     {
-        public HttpRequest Parse(Stream stream)
+        public async Task<HttpRequest> ParseAsync(Stream stream)
         {
-            string startLine = stream.ReadLine(Encoding.UTF8);
+            var streamReader = new StreamReader(stream);
+            string startLine = await streamReader.ReadLineAsync();
 
             HttpRequest request = new HttpRequest();
             var startLineRule = new Regex(@"^(GET|HEAD|POST|PUT|DELETE|TRACE|CONNECT|OPTIONS) (.+) HTTP/1.1$");
@@ -34,7 +35,7 @@ namespace TinyHttpService.RequestParser
                 throw new HttpRequestParseException("http格式错误");
             }
 
-            request.Header = GetHttpHeader(stream);
+            request.Header = await GetHttpHeaderAsync(streamReader);
 
             Encoding encoding = GetBodyEncoding(request.Header["Content-Type"] ?? string.Empty);
            
@@ -46,12 +47,12 @@ namespace TinyHttpService.RequestParser
             return request;
         }
 
-        private static HttpHeader GetHttpHeader(Stream stream)
+        private static async Task<HttpHeader> GetHttpHeaderAsync(StreamReader reader)
         {
             HttpHeader header = new HttpHeader();
             string line;
             var headerPropertyRule = new Regex(@"(.+?):(.+)");
-            while ((line = stream.ReadLine(Encoding.UTF8)) != String.Empty)
+            while ((line = await reader.ReadLineAsync()) != String.Empty)
             {
                 if (headerPropertyRule.IsMatch(line))
                 {

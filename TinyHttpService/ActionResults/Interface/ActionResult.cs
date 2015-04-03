@@ -9,6 +9,6 @@ namespace TinyHttpService.ActionResults.Interface
 {
     public abstract class ActionResult
     {
-        public abstract void Execute(HttpContext context);
+        public abstract Task ExecuteAsync(HttpContext context);
     }
 }

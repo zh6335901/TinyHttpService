@@ -53,42 +53,44 @@ namespace TinyHttpService.HttpData
             }
         }
 
-        private void WriteHead()
+        private async Task WriteHeadAsync()
         {
             string head = string.Format("HTTP/1.1 {0} {1}\r\n{2}\r\n",
                                             StatusCode, HttpStatusCodes.StatusCodes[StatusCode], Header.ToString());
 
-            ResponseStream.Write(head);
+            var headBytes = Encoding.UTF8.GetBytes(head);
+            await ResponseStream.WriteAsync(Encoding.UTF8.GetBytes(head), 0, headBytes.Length);
             ResponseStream.Flush();
             isHeaderWritten = true;
         }
 
-        public void Write(byte[] bytes)
+        public async Task WriteAsync(byte[] bytes)
         {
             if (!isHeaderWritten)
             {
-                WriteHead();
+                await WriteHeadAsync();
             }
 
             if (bytes != null)
             {
-                ResponseStream.Write(bytes, 0, bytes.Length);
+                await ResponseStream.WriteAsync(bytes, 0, bytes.Length);
             }
         }
 
-        public void Write(string str)
+        public async Task WriteAsync(string str)
         {
             if (!isHeaderWritten)
             {
-                WriteHead();
+                await WriteHeadAsync();
             }
 
             if (!string.IsNullOrEmpty(str))
             {
-                ResponseStream.Write(Encoding.UTF8.GetBytes(str), 0, Encoding.UTF8.GetByteCount(str));
+                var bytes = Encoding.UTF8.GetBytes(str);
+                await ResponseStream.WriteAsync(bytes, 0, bytes.Length);
             }
 
-            ResponseStream.Flush();
+            await ResponseStream.FlushAsync();
         }
 
         private string contentType;

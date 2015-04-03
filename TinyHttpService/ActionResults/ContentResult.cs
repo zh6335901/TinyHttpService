@@ -18,7 +18,7 @@ namespace TinyHttpService.ActionResults
             this.Content = content;
         }
 
-        public override void Execute(HttpContext context)
+        public override async Task ExecuteAsync(HttpContext context)
         {
             if (context == null)
             {
@@ -29,7 +29,7 @@ namespace TinyHttpService.ActionResults
             response.ContentType = "text/plain; charset=utf-8";
             response.StatusCode = 200;
             response.AddHeader("Content-Length", Encoding.UTF8.GetByteCount(Content).ToString());
-            response.Write(Content);
+            await response.WriteAsync(Content);
         }
     }
 }

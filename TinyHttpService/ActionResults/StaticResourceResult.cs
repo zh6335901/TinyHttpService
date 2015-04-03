@@ -18,7 +18,7 @@ namespace TinyHttpService.ActionResults
             this.FilePath = path;
         }
 
-        public override void Execute(HttpContext context)
+        public override async Task ExecuteAsync(HttpContext context)
         {
             var fullpath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, FilePath.TrimStart('/', '\\'));
             var response = context.Response;
@@ -34,7 +34,7 @@ namespace TinyHttpService.ActionResults
                         if (time.Ticks >= File.GetLastWriteTimeUtc(fullpath).Ticks) 
                         {
                             response.StatusCode = 304;
-                            response.Write(string.Empty);
+                            await response.WriteAsync(string.Empty);
                             return;
                         }
                     }
@@ -50,15 +50,15 @@ namespace TinyHttpService.ActionResults
                 using (var fs = new FileStream(fullpath, FileMode.Open, FileAccess.Read, FileShare.Read)) 
                 {
                     response.AddHeader("Content-Length", fs.Length.ToString());
-                    while ((readBytes = fs.Read(buffer, 0, 4096)) > 0)
+                    while ((readBytes = await fs.ReadAsync(buffer, 0, 4096)) > 0)
                     {
-                        response.Write(buffer);
+                        await response.WriteAsync(buffer);
                     }
                 }
             }
             else 
             {
-                (new Http404NotFoundResult()).Execute(context);
+                await (new Http404NotFoundResult()).ExecuteAsync(context);
             }
         }
     }

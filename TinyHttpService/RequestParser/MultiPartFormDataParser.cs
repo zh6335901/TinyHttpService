@@ -44,7 +44,6 @@ namespace TinyHttpService.RequestParser
             BinaryBufferSize = binaryBufferSize;
             Files = new List<FilePart>();
             Parameters = new Dictionary<string, string>();
-            Parse();
         }
 
         private string DetectBoundaryKey(RebufferableStreamReader reader)
@@ -54,7 +53,7 @@ namespace TinyHttpService.RequestParser
             return boundary;
         }
 
-        private void Parse()
+        private async Task ParseAsync()
         {
             string line = reader.ReadLine();
             while (!this.readEndBoundary)

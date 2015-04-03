@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using TinyHttpService.HttpData;
 using TinyHttpService.RequestParser.Interface;
 
@@ -10,9 +11,11 @@ namespace TinyHttpService.RequestParser
 {
     public class NonBodyDataParseCommand : RequestBodyDataParseCommand
     {
-        public override HttpRequestBody Execute(Stream stream, Encoding e)
+        public override async Task<HttpRequestBody> ExecuteAsync(Stream stream, Encoding e)
         {
-            return new HttpRequestBody();
+            var source = new TaskCompletionSource<HttpRequestBody>();
+            source.SetResult(new HttpRequestBody());
+            return await source.Task;
         }
     }
 }

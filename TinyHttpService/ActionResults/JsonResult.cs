@@ -20,7 +20,7 @@ namespace TinyHttpService.ActionResults
 
         public JsonResult() { }
 
-        public override void Execute(HttpContext context)
+        public override async Task ExecuteAsync(HttpContext context)
         {
             if (context == null)
             {
@@ -33,13 +33,13 @@ namespace TinyHttpService.ActionResults
 
             if (Data == null)
             {
-                response.Write(string.Empty);
+                await response.WriteAsync(string.Empty);
                 return;
             }
 
             var json = JsonSerializer.SerializeToString(Data, Data.GetType());
             response.AddHeader("Content-Length", Encoding.UTF8.GetByteCount(json).ToString());
-            response.Write(json);
+            await response.WriteAsync(json);
         }
     }
 }

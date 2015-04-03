@@ -11,7 +11,7 @@ namespace TinyHttpService.RequestParser
 {
     public class MultiPartFormDataParseCommand : RequestBodyDataParseCommand
     {
-        public override HttpRequestBody Execute(Stream stream, Encoding e)
+        public override async Task<HttpRequestBody> ExecuteAsync(Stream stream, Encoding e)
         {
             MultiPartFormDataParser parser = new MultiPartFormDataParser(stream, e);
             HttpRequestBody body = new HttpRequestBody();

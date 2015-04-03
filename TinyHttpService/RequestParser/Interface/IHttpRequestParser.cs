@@ -11,6 +11,6 @@ namespace TinyHttpService.RequestParser.Interface
 {
     public interface IHttpRequestParser
     {
-        HttpRequest Parse(Stream stream);
+        Task<HttpRequest> ParseAsync(Stream stream);
     }
 }

@@ -28,19 +28,26 @@ namespace TinyHttpService.Implement
             this.routeHandler = routeHandler;
         }
 
-        public void ProcessRequest(Stream stream)
+        public async Task ProcessRequestAsync(Stream stream)
         {
             HttpResponse response = new HttpResponse(stream);
             HttpRequest request = null;
+
+            bool isParseSuccess;
             try
             {
-                request = requestParser.Parse(stream);
+                request = await requestParser.ParseAsync(stream);
+                isParseSuccess = true;
             }
             catch (HttpRequestParseException e) 
             {
                 response.StatusCode = 400;
-                response.Write(e.Message);
-                return;
+                isParseSuccess = false;
+            }
+
+            if (!isParseSuccess) 
+            {
+                await response.WriteAsync("Bad Request");
             }
 
             HttpContext context = new HttpContext 
@@ -53,11 +60,11 @@ namespace TinyHttpService.Implement
             if (func != null)
             {
                 ActionResult actionResult = func(context);
-                actionResult.Execute(context);
+                await actionResult.ExecuteAsync(context);
             }
             else
             {
-                (new Http404NotFoundResult()).Execute(context);
+                await (new Http404NotFoundResult()).ExecuteAsync(context);
             }
         }
     }

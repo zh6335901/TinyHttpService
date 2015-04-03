@@ -13,8 +13,10 @@ namespace TinyHttpService.RequestParser
 {
     public class JsonBodyDataParseCommand : RequestBodyDataParseCommand
     {
-        public override HttpRequestBody Execute(Stream stream, Encoding e)
+        public override async Task<HttpRequestBody> ExecuteAsync(Stream stream, Encoding e)
         {
+            var reader = new StreamReader(stream);
+            var bodyString = await reader.ReadToEndAsync();
             Dictionary<string, string> dict = JsonSerializer.DeserializeFromStream<Dictionary<string, string>>(stream);
             HttpRequestBody body = new HttpRequestBody();
             body.Properties = dict;

@@ -15,69 +15,45 @@ namespace TinyHttpService.Core
     {
         private TcpListener listener;
         private IHttpServiceHandler httpServiceHandler;
+        private bool active = true;
 
         public TinyHttpService(IHttpServiceHandler handler)
         {
             this.httpServiceHandler = handler;
         }
 
-        public virtual void Bind(int port)
+        public virtual async void Bind(int port)
         {
             listener = new TcpListener(IPAddress.Any, port);
             listener.Start();
-            listener.BeginAcceptTcpClient(AcceptCallback, listener);
-        }
 
-        private void AcceptCallback(IAsyncResult ar)
-        {
-            var listener = ar.AsyncState as TcpListener;
-
-            try
+            while (active)
             {
-                var client = listener.EndAcceptTcpClient(ar);
-
-                if (client != null)
+                using (var client = await listener.AcceptTcpClientAsync())
                 {
-                    Thread task = new Thread((obj) =>
+                    while (client.Connected 
+                                && client.Client.Poll(01, SelectMode.SelectRead)
+                                && client.Client.Poll(01, SelectMode.SelectWrite)
+                                && !client.Client.Poll(01, SelectMode.SelectError))
                     {
-                        try
+                        if (client.GetStream().DataAvailable)
                         {
-                            while (client.Connected && (client.Client.Poll(01, SelectMode.SelectRead) 
-                                                            && client.Client.Poll(01, SelectMode.SelectWrite)
-                                                            && !client.Client.Poll(01, SelectMode.SelectError)))
-                            {
-                                if (client.GetStream().DataAvailable)
-                                {
-                                    httpServiceHandler.ProcessRequest(client.GetStream());
-                                }
-                            }
+                            await httpServiceHandler.ProcessRequestAsync(client.GetStream());
                         }
-                        catch (IOException e) 
-                        {
-                        }
-                        finally
-                        {
-                            client.Close();
-                        }
-
-                    });
-                    task.IsBackground = true; 
-                    task.Start(client);
+                    }
                 }
             }
-            finally
-            {
-                listener.BeginAcceptTcpClient(AcceptCallback, listener);
-            }
         }
 
-        public virtual void Close()
+        public void Close()
         {
             Dispose();
         }
 
         public virtual void Dispose()
         {
+            active = false;
+
             if (listener != null)
             {
                 listener.Stop();

@@ -12,13 +12,14 @@ namespace TinyHttpService.RequestParser
 {
     public class UrlEncodedBodyDataParseCommand : RequestBodyDataParseCommand
     {
-        public override HttpRequestBody Execute(Stream stream, Encoding e)
+        public override async Task<HttpRequestBody> ExecuteAsync(Stream stream, Encoding e)
         {
             string line;
             StringBuilder formBodySb = new StringBuilder();
             HttpRequestBody body = new HttpRequestBody();
 
-            while (!string.IsNullOrEmpty(line = stream.ReadLine(e)))
+            var reader = new StreamReader(stream, e);
+            while (!string.IsNullOrEmpty(line = await reader.ReadLineAsync()))
             {
                 formBodySb.Append(line);
             }

@@ -9,6 +9,6 @@ namespace TinyHttpService.Core.Interface
 {
     public interface IHttpServiceHandler
     {
-        void ProcessRequest(Stream stream);
+        Task ProcessRequestAsync(Stream stream);
     }
 }

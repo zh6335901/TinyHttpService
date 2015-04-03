@@ -10,7 +10,7 @@ namespace TinyHttpService.ActionResults
 {
     public class Http404NotFoundResult : ActionResult
     {
-        public override void Execute(HttpContext context)
+        public override async Task ExecuteAsync(HttpContext context)
         {
             if (context == null)
             {
@@ -20,7 +20,7 @@ namespace TinyHttpService.ActionResults
             var response = context.Response;
             response.StatusCode = 404;
             response.ContentType = "text/html";
-            response.Write("<h1>Not Found</h1>");
+            await response.WriteAsync("<h1>Not Found</h1>");
         }
     }
 }
