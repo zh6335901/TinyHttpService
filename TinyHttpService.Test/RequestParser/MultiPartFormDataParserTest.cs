@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TinyHttpService.RequestParser;
 using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace TinyHttpService.Test.RequestParser
 {
@@ -45,22 +46,24 @@ namespace TinyHttpService.Test.RequestParser
               "\r\n--boundry--";
 
         [TestMethod]
-        public void CanParseMultiParamsData() 
+        public async Task CanParseMultiParamsData() 
         {
             using (MemoryStream ms = new MemoryStream(Encoding.Default.GetBytes(multiParamsTestData)))
             {
                 MultiPartFormDataParser parser = new MultiPartFormDataParser(ms, Encoding.Default);
+                await parser.ParseAsync();
                 Assert.AreEqual(parser.Parameters["text"], "textdata");
                 Assert.AreEqual(parser.Parameters["username"], "zhang");
             }
         }
 
         [TestMethod]
-        public void CanParseMultiFilesData() 
+        public async Task CanParseMultiFilesData() 
         {
             using (MemoryStream ms = new MemoryStream(Encoding.Default.GetBytes(multiFilesTestData)))
             {
                 MultiPartFormDataParser parser = new MultiPartFormDataParser(ms, Encoding.Default);
+                await parser.ParseAsync();
                 Assert.AreEqual(parser.Files.Count, 2);
                 Assert.AreEqual(parser.Files[0].Filename, "first.txt");
                 Assert.AreEqual(parser.Files[0].Name, "file");
@@ -80,11 +83,12 @@ namespace TinyHttpService.Test.RequestParser
         }
 
         [TestMethod]
-        public void CanParseMultiParamsAndFilesData()
+        public async Task CanParseMultiParamsAndFilesData()
         {
             using (MemoryStream ms = new MemoryStream(Encoding.Default.GetBytes(multiParamsAndFilesTestData))) 
             {
                 MultiPartFormDataParser parser = new MultiPartFormDataParser(ms, Encoding.Default);
+                await parser.ParseAsync();
                 Assert.AreEqual(parser.Parameters["text"], "textdata");
                 Assert.AreEqual(parser.Parameters["username"], "zhang");
 

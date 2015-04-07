@@ -61,7 +61,7 @@ namespace TinyHttpService.RequestParser
             while (!this.readEndBoundary)
             {
                 string partHeader = string.Empty;
-                while ((line = await reader.ReadLineAsync()) != null)
+                while ((line = await reader.ReadLineAsync()) != string.Empty)
                 {
                     if (line != boundary) 
                     {

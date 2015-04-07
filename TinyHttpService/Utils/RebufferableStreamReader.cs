@@ -38,67 +38,45 @@ namespace TinyHttpService.Utils
 
         public async Task<string> ReadLineAsync()
         {
-            if (buffer == null || buffer.Length == 0)
-            {
-                var bytes = new byte[4096];
-                int readCount = await stream.ReadAsync(buffer, 0, bytes.Length);
-                if (readCount < bytes.Length)
-                {
-                    return encoding.GetString(bytes);
-                }
-                else 
-                {
-                    for (int i = 0; i < bytes.Length; i++) 
-                    {
-                        if (bytes[i] == '\n') 
-                        {
-                            var lineBytes = new byte[i + 1];
-                            buffer = new byte[bytes.Length - i - 1];
-                            Array.Copy(bytes, lineBytes, i + 1);
-                            Array.Copy(bytes, i + 1, buffer, 0, bytes.Length - i - 1);
+            string line;
+            int newLineIndex;
+            buffer = buffer ?? new byte[0];
 
-                            var line = encoding.GetString(lineBytes);
-                            if (line.Contains("\r\n"))
-                            {
-                                return line.Substring(0, line.Length - 2);
-                            }
-                            else
-                            {
-                                return line.Substring(0, line.Length - 1);
-                            }
-                        }
-                    }
+            if (TryGetLine(buffer, buffer.Length, out line, out newLineIndex)) 
+            {
+                byte[] newBuffer = new byte[buffer.Length - newLineIndex];
+                Array.Copy(buffer, newLineIndex, newBuffer, 0, newBuffer.Length);
+                buffer = newBuffer;
+
+                return line;
+            }
+
+            byte[] readBytes = new byte[4096];
+            int readCount = 0;
+            do
+            {
+                readCount = await stream.ReadAsync(readBytes, 0, readBytes.Length);
+
+                if (TryGetLine(readBytes, readCount, out line, out newLineIndex)) 
+                {
+                    line = encoding.GetString(buffer) + line;
+
+                    buffer = new byte[readCount - newLineIndex];
+                    Array.Copy(readBytes, newLineIndex, buffer, 0, buffer.Length);
+
+                    return line;
+                }
+    
+                if (readCount > 0) 
+                {
+                    buffer = buffer.Concat(readBytes).ToArray();
                 }
             }
-            else 
-            {
-                for (int i = 0; i < buffer.Length; i++) 
-                {
-                    if (buffer[i] == '\n')
-                    {
-                        var lineBytes = new byte[i + 1];
-                        var newBuffer = new byte[buffer.Length - i - 1];
-                        Array.Copy(buffer, lineBytes, i + 1);
-                        Array.Copy(buffer, i + 1, newBuffer, 0, buffer.Length - i - 1);
-                        buffer = newBuffer;
+            while (readCount > 0);
 
-                        var line = encoding.GetString(lineBytes);
-                        if (line.Contains("\r\n"))
-                        {
-                            return line.Substring(0, line.Length - 2);
-                        }
-                        else
-                        {
-                            return line.Substring(0, line.Length - 1);
-                        }
-                    }
-                }
-
-                var lineEnd = await streamReader.ReadLineAsync();
-                var l = encoding.GetString(buffer) + lineEnd ?? string.Empty;
-                buffer = null;
-                return l;
-            }
+            line = encoding.GetString(buffer);
+            buffer = null;
+            return line;
         }
 
         public async Task<int> ReadAsync(byte[] bytes, int offset, int length)
@@ -152,6 +130,33 @@ namespace TinyHttpService.Utils
         public void Dispose()
         {
             stream.Close();
+        }
+
+        private bool TryGetLine(byte[] bytes, int count, out string line, out int newLineIndex)
+        {
+            for (int i = 0; i < count; i++)
+            {
+                if (bytes[i] == '\n')
+                {
+                    int lineBytesCount = i;
+                    if (i > 0 && bytes[i - 1] == '\r')
+                    {
+                        lineBytesCount -= 1;
+                    }
+
+                    byte[] lineBytes = new byte[lineBytesCount];
+                    byte[] newBuffer = new byte[count - i - 1];
+                    Array.Copy(bytes, lineBytes, lineBytesCount);
+
+                    line = encoding.GetString(lineBytes);
+                    newLineIndex = i + 1;
+                    return true;
+                }
+            }
+
+            line = string.Empty;
+            newLineIndex = -1;
+            return false;
         }
     }
 }
