@@ -49,7 +49,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <Content Include="file\8.PNG" />
+    <Content Include="file\8.PNG">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="public\css\style.css">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
