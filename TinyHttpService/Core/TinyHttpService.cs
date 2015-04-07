@@ -38,14 +38,22 @@ namespace TinyHttpService.Core
                     {
                         if (client.GetStream().DataAvailable)
                         {
-                            await httpServiceHandler.ProcessRequestAsync(client.GetStream());
+                            try
+                            {
+                                await httpServiceHandler.ProcessRequestAsync(client.GetStream());
+                            }
+                            catch (IOException)
+                            {
+                                //when client interrupt connect, it would be catched.
+                                //ignore...
+                            }
                         }
                     }
                 }
             }
         }
 
-        public void Close()
+        public virtual void Close()
         {
             Dispose();
         }

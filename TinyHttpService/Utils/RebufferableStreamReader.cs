@@ -24,15 +24,27 @@ namespace TinyHttpService.Utils
             this.stream = stream;
         }
 
-        public void Rebuffer(byte[] bytes)
+        public void Rebuffer(byte[] bytes, bool bufferEnd = false)
         {
+            if (bytes == null)
+            {
+                throw new ArgumentNullException("bytes");
+            }
+
             if (buffer == null)
             {
                 buffer = bytes;
             }
             else
             {
-                buffer = buffer.Concat(bytes).ToArray();
+                if (!bufferEnd)
+                {
+                    buffer = bytes.Concat(buffer).ToArray();
+                }
+                else
+                {
+                    buffer = buffer.Concat(bytes).ToArray();
+                }
             }
         }
 
@@ -73,6 +85,12 @@ namespace TinyHttpService.Utils
                 }
             }
             while (readCount > 0);
+
+            if (buffer.Length == 0)
+            {
+                //end of stream
+                return null;
+            }
 
             line = encoding.GetString(buffer);
             buffer = null;
