@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TinyHttpService.HttpData;
 
-namespace TinyHttpService.RequestParser.Interface
+namespace TinyHttpService.RequestParser
 {
     public interface IHttpRequestParser
     {

@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TinyHttpService.ActionResults.Interface;
+using TinyHttpService.ActionResults;
 using TinyHttpService.HttpData;
 
 namespace TinyHttpService.ActionResults

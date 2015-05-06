@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TinyHttpService.HttpData;
-using TinyHttpService.RequestParser.Interface;
 
-namespace TinyHttpService.RequestParser
+namespace TinyHttpService.RequestParser.Commands
 {
     public class NonBodyDataParseCommand : RequestBodyDataParseCommand
     {

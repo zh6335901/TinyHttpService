@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using TinyHttpService.ActionResults.Interface;
+using TinyHttpService.ActionResults;
 using TinyHttpService.HttpData;
 
-namespace TinyHttpService.Router.Interface
+namespace TinyHttpService.Router
 {
     public interface IRouteHandler
     {

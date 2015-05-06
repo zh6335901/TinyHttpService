@@ -6,9 +6,8 @@ using System.Net.Sockets;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-
 using TinyHttpService.HttpData;
-using TinyHttpService.RequestParser.Interface;
+using TinyHttpService.RequestParser.Commands;
 using TinyHttpService.Utils;
 
 namespace TinyHttpService.RequestParser

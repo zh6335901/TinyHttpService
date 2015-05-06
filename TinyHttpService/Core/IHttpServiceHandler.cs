@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TinyHttpService.Core.Interface
+namespace TinyHttpService.Core
 {
     public interface IHttpServiceHandler
     {

@@ -5,10 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using TinyHttpService.HttpData;
-using TinyHttpService.RequestParser.Interface;
 using TinyHttpService.Utils;
 
-namespace TinyHttpService.RequestParser
+namespace TinyHttpService.RequestParser.Commands
 {
     public class UrlEncodedBodyDataParseCommand : RequestBodyDataParseCommand
     {

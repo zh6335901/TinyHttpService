@@ -9,6 +9,7 @@ namespace TinyHttpService.RequestParser
     public class HttpRequestParseException : Exception
     {
         public HttpRequestParseException() { }
+
         public HttpRequestParseException(string message) : base(message) { }
     }
 }

@@ -7,17 +7,17 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using TinyHttpService.Core.Interface;
+using TinyHttpService.Core;
 
 namespace TinyHttpService.Core
 {
-    public class TinyHttpService : IHttpService
+    public class HttpService : IHttpService
     {
         private TcpListener listener;
         private IHttpServiceHandler httpServiceHandler;
         private bool active = true;
 
-        public TinyHttpService(IHttpServiceHandler handler)
+        public HttpService(IHttpServiceHandler handler)
         {
             this.httpServiceHandler = handler;
         }

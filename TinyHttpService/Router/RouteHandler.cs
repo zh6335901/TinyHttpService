@@ -6,9 +6,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using TinyHttpService.ActionResults;
-using TinyHttpService.ActionResults.Interface;
 using TinyHttpService.HttpData;
-using TinyHttpService.Router.Interface;
+using TinyHttpService.Router;
 using TinyHttpService.Utils;
 
 namespace TinyHttpService.Router

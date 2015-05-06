@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TinyHttpService.HttpData;
 
-namespace TinyHttpService.ActionResults.Interface
+namespace TinyHttpService.ActionResults
 {
     public abstract class ActionResult
     {

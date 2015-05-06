@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using TinyHttpService.RequestParser.Interface;
+using TinyHttpService.RequestParser.Commands;
 
 namespace TinyHttpService.RequestParser
 {

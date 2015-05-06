@@ -55,7 +55,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ActionResults\Http404NotFoundResult.cs" />
-    <Compile Include="ActionResults\Interface\ActionResult.cs" />
+    <Compile Include="ActionResults\ActionResult.cs" />
     <Compile Include="ActionResults\JsonResult.cs" />
     <Compile Include="ActionResults\StaticResourceResult.cs">
       <SubType>Code</SubType>
@@ -63,7 +63,7 @@
     <Compile Include="ActionResults\ViewResult.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Core\DefaultTinyHttpServiceFactory.cs" />
+    <Compile Include="DefaultTinyHttpServiceFactory.cs" />
     <Compile Include="HttpData\HttpContext.cs" />
     <Compile Include="HttpData\HttpRequest.cs" />
     <Compile Include="HttpData\HttpRequestBody.cs" />
@@ -75,21 +75,21 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="RequestParser\BodyParseCommandFactory.cs" />
-    <Compile Include="RequestParser\HttpRequestParseException.cs" />
+    <Compile Include="RequestParser\Exceptions\HttpRequestParseException.cs" />
     <Compile Include="RequestParser\HttpRequestParser.cs" />
-    <Compile Include="Core\TinyHttpService.cs" />
-    <Compile Include="Core\TinyHttpServiceHandler.cs" />
-    <Compile Include="RequestParser\Interface\RequestBodyDataParseCommand.cs" />
-    <Compile Include="RequestParser\Interface\IHttpRequestParser.cs" />
-    <Compile Include="Core\Interface\IHttpService.cs" />
-    <Compile Include="Core\Interface\IHttpServiceHandler.cs" />
+    <Compile Include="Core\HttpService.cs" />
+    <Compile Include="Core\HttpServiceHandler.cs" />
+    <Compile Include="RequestParser\Commands\RequestBodyDataParseCommand.cs" />
+    <Compile Include="RequestParser\IHttpRequestParser.cs" />
+    <Compile Include="Core\IHttpService.cs" />
+    <Compile Include="Core\IHttpServiceHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RequestParser\JsonBodyDataParseCommand.cs" />
-    <Compile Include="RequestParser\MultiPartFormDataParseCommand.cs" />
+    <Compile Include="RequestParser\Commands\JsonBodyDataParseCommand.cs" />
+    <Compile Include="RequestParser\Commands\MultiPartFormDataParseCommand.cs" />
     <Compile Include="RequestParser\MultiPartFormDataParser.cs" />
-    <Compile Include="RequestParser\NonBodyDataParseCommand.cs" />
-    <Compile Include="RequestParser\UrlEncodedBodyDataParseCommand.cs" />
-    <Compile Include="Router\Interface\IRouteHandler.cs" />
+    <Compile Include="RequestParser\Commands\NonBodyDataParseCommand.cs" />
+    <Compile Include="RequestParser\Commands\UrlEncodedBodyDataParseCommand.cs" />
+    <Compile Include="Router\IRouteHandler.cs" />
     <Compile Include="Router\RouteData.cs" />
     <Compile Include="Router\RouteHandler.cs">
       <SubType>Code</SubType>

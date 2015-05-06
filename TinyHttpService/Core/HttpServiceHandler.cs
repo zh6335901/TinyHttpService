@@ -6,23 +6,19 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using TinyHttpService.ActionResults;
-using TinyHttpService.ActionResults.Interface;
 using TinyHttpService.Core;
-using TinyHttpService.Core.Interface;
 using TinyHttpService.HttpData;
 using TinyHttpService.RequestParser;
-using TinyHttpService.RequestParser.Interface;
 using TinyHttpService.Router;
-using TinyHttpService.Router.Interface;
 
-namespace TinyHttpService.Implement
+namespace TinyHttpService
 {
-    public class TinyHttpServiceHandler : IHttpServiceHandler
+    public class HttpServiceHandler : IHttpServiceHandler
     {
         private IHttpRequestParser requestParser;
         private IRouteHandler routeHandler;
 
-        public TinyHttpServiceHandler(IHttpRequestParser requestParser, IRouteHandler routeHandler)
+        public HttpServiceHandler(IHttpRequestParser requestParser, IRouteHandler routeHandler)
         {
             this.requestParser = requestParser;
             this.routeHandler = routeHandler;

@@ -1,10 +1,10 @@
 ﻿using System;
 using ServiceStack.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TinyHttpService.RequestParser;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using TinyHttpService.RequestParser.Commands;
 
 namespace TinyHttpService.Test.RequestParser
 {
