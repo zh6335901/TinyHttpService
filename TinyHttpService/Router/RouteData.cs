@@ -9,6 +9,7 @@ namespace TinyHttpService.Router
     public class RouteData
     {
         public Dictionary<string, string> DataTokens { get; private set; }
+
         public string RouteUri { get; set; }
 
         public RouteData() 

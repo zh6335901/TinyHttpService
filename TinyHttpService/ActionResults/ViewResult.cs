@@ -13,6 +13,7 @@ namespace TinyHttpService.ActionResults
     public class ViewResult<T> : ActionResult
     {
         public string ViewPath { get; set; }
+
         public T Model { get; set; }
 
         public ViewResult(string viewPath, T model)

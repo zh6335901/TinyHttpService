@@ -11,6 +11,7 @@ namespace TinyHttpService.Router
     public interface IRouteHandler
     {
         RouteTable Routes { get; }
+
         Func<HttpContext, ActionResult> Handle(HttpRequest request);
     }
 }

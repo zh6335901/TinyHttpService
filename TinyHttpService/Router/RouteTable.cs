@@ -35,9 +35,13 @@ namespace TinyHttpService.Router
         }
 
         public Dictionary<string, Func<HttpContext, ActionResult>> GetActions { get; private set; }
+
         public Dictionary<string, Func<HttpContext, ActionResult>> PostActions { get; private set; }
+
         public Dictionary<string, Func<HttpContext, ActionResult>> PutActions { get; private set; }
+
         public Dictionary<string, Func<HttpContext, ActionResult>> DeleteActions { get; private set; }
+
         public Dictionary<string, Func<HttpContext, ActionResult>> AllActions { get; private set; }
 
         public RouteTable All(string url, Func<HttpContext, ActionResult> func)

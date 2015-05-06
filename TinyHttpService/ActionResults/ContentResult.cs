@@ -13,6 +13,7 @@ namespace TinyHttpService.ActionResults
         public string Content { get; set; }
 
         public ContentResult() { }
+
         public ContentResult(string content)
         {
             this.Content = content;

@@ -12,6 +12,7 @@ namespace TinyHttpService.HttpData
     public class HttpResponse
     {
         public Stream ResponseStream { get; private set; }
+
         public HttpHeader Header { get; set; }
 
         private int statusCode;
@@ -94,6 +95,7 @@ namespace TinyHttpService.HttpData
         }
 
         private string contentType;
+
         public string ContentType 
         {
             get 

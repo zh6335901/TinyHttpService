@@ -10,6 +10,7 @@ namespace TinyHttpService.HttpData
     public class HttpRequestBody
     {
         public Dictionary<string, string> Properties { get; set; }
+
         public List<FilePart> Files { get; set; }
 
         public string this[string key]
